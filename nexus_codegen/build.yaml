@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      nexus_codegen|nexus_codegenerator:
+        enabled: true
+
+builders:
+  mapper_generator:
+    import: "package:nexus_codegen/builder.dart"
+    builder_factories: ["nexusCodeGenerator"]
+    build_extensions: {".dart": [".g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
