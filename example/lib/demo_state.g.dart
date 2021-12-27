@@ -26,6 +26,8 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
       super.flag = newValue;
 
       markNeedsUpdate();
+
+      initiateReactionsForVariable('flag', oldValue, newValue);
     }
   }
 
@@ -57,6 +59,68 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
       markNeedsUpdate();
 
       initiateReactionsForVariable('intList', oldValue, newValue);
+    }
+  }
+
+  bool _$stringListGate = false;
+
+  ReactiveSet<String> _getWrappedstringList() {
+    _$stringListGate = true;
+
+    final result = this.stringList.wrap<String>(
+        controller: this, variableName: 'stringList', disableReactions: false);
+
+    _$stringListGate = false;
+
+    return result;
+  }
+
+  late ReactiveSet<String> _$stringList = _getWrappedstringList();
+
+  @override
+  get stringList => !_$stringListGate ? _$stringList : super.stringList;
+
+  @override
+  set stringList(ReactiveSet<String> newValue) {
+    if (stringList != newValue) {
+      var oldValue = stringList;
+      super.stringList = newValue;
+      _$stringList = _getWrappedstringList();
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('stringList', oldValue, newValue);
+    }
+  }
+
+  bool _$mapGate = false;
+
+  ReactiveMap<String, Map<String, String>> _getWrappedmap() {
+    _$mapGate = true;
+
+    final result = this.map.wrap<String, Map<String, String>>(
+        controller: this, variableName: 'map', disableReactions: false);
+
+    _$mapGate = false;
+
+    return result;
+  }
+
+  late ReactiveMap<String, Map<String, String>> _$map = _getWrappedmap();
+
+  @override
+  get map => !_$mapGate ? _$map : super.map;
+
+  @override
+  set map(ReactiveMap<String, Map<String, String>> newValue) {
+    if (map != newValue) {
+      var oldValue = map;
+      super.map = newValue;
+      _$map = _getWrappedmap();
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('map', oldValue, newValue);
     }
   }
 

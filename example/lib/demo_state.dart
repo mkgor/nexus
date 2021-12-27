@@ -16,11 +16,25 @@ abstract class DemoStateBase extends NexusController {
   @Reactive(disableReactions: true)
   ReactiveList<int> intList = ReactiveList<int>();
 
+  @Reactive()
+  ReactiveSet<String> stringList = ReactiveSet<String>();
+
+  @Reactive()
+  ReactiveMap<String, Map<String, String>> map =
+      ReactiveMap<String, Map<String, String>>.of({
+        'john': {
+          'age': "12",
+          'weight': "85"
+        },
+        'michael': {
+          'age': "14",
+          'weight': "90"
+        }
+      });
+
   @action
   void increment(int value) {
-    counter += value;
 
-    intList = [1,2,3].toReactiveList();
   }
 
   @override

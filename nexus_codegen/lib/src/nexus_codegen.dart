@@ -72,7 +72,7 @@ class StateVisitor extends SimpleElementVisitor {
 
       var _isReactionsDisabled = _reactiveAnnotation.read("disableReactions").boolValue;
 
-      if (_typeWithoutGeneric == "ReactiveList") {
+      if (["ReactiveList", "ReactiveSet", "ReactiveMap"].contains(_typeWithoutGeneric)) {
         template = ReactiveCollectionTemplate(
             type: element.type.getDisplayString(withNullability: true),
             name: element.name,

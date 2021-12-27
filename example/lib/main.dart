@@ -69,6 +69,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            NexusBuilder(
+              controller: state,
+              builder: (BuildContext context) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...state.stringList.map((element) => Text(element.toString()))
+                  ]
+                );
+              },
+            ),
+            NexusBuilder(
+              controller: state,
+              builder: (BuildContext context) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("John age: ${state.map['john']?['age']}"),
+                        Text("John weight: ${state.map['john']?['weight']}"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Michael age: ${state.map['michael']?['age']}"),
+                        Text("Michael weight: ${state.map['michael']?['weight']}"),
+                      ],
+                    ),
+                  ]
+                );
+              },
+            ),
           ],
         ),
       ),
