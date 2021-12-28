@@ -6,11 +6,37 @@ import 'package:flutter/foundation.dart';
 import 'controller.dart';
 
 extension ListExtension<T> on List<T> {
-  ReactiveList<T> toReactiveList(
+  ReactiveList<T> toReactive(
           {NexusController? controller,
           String? variableName,
           bool disableReactions = false}) =>
       ReactiveList<T>.of(
+        this,
+        controller: controller,
+        variableName: variableName,
+        disableReactions: disableReactions,
+      );
+}
+
+extension SetExtension<T> on Set<T> {
+  ReactiveSet<T> toReactive(
+          {NexusController? controller,
+          String? variableName,
+          bool disableReactions = false}) =>
+      ReactiveSet<T>.of(
+        this,
+        controller: controller,
+        variableName: variableName,
+        disableReactions: disableReactions,
+      );
+}
+
+extension MapExtension<K, V> on Map<K, V> {
+  ReactiveMap<K, V> toReactive(
+          {NexusController? controller,
+          String? variableName,
+          bool disableReactions = false}) =>
+      ReactiveMap<K, V>.of(
         this,
         controller: controller,
         variableName: variableName,
