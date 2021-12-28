@@ -95,10 +95,10 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
 
   bool _$mapGate = false;
 
-  ReactiveMap<String, Map<String, String>> _getWrappedmap() {
+  ReactiveMap<String, ReactiveMap<String, int>> _getWrappedmap() {
     _$mapGate = true;
 
-    final result = this.map.wrap<String, Map<String, String>>(
+    final result = this.map.wrap<String, ReactiveMap<String, int>>(
         controller: this, variableName: 'map', disableReactions: false);
 
     _$mapGate = false;
@@ -106,13 +106,13 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
     return result;
   }
 
-  late ReactiveMap<String, Map<String, String>> _$map = _getWrappedmap();
+  late ReactiveMap<String, ReactiveMap<String, int>> _$map = _getWrappedmap();
 
   @override
   get map => !_$mapGate ? _$map : super.map;
 
   @override
-  set map(ReactiveMap<String, Map<String, String>> newValue) {
+  set map(ReactiveMap<String, ReactiveMap<String, int>> newValue) {
     if (map != newValue) {
       var oldValue = map;
       super.map = newValue;

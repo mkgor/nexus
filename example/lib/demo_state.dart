@@ -20,21 +20,27 @@ abstract class DemoStateBase extends NexusController {
   ReactiveSet<String> stringList = ReactiveSet<String>();
 
   @Reactive()
-  ReactiveMap<String, Map<String, String>> map =
-      ReactiveMap<String, Map<String, String>>.of({
-        'john': {
-          'age': "12",
-          'weight': "85"
-        },
-        'michael': {
-          'age': "14",
-          'weight': "90"
-        }
-      });
+  late ReactiveMap<String, ReactiveMap<String, int>> map =
+      ReactiveMap<String, ReactiveMap<String, int>>.of({
+    'John': ReactiveMap<String, int>.of(
+      {
+        "age": 12,
+        "weight": 80,
+      },
+      controller: this,
+    ),
+    'Jim': ReactiveMap<String, int>.of(
+      {
+        "age": 16,
+        "weight": 85,
+      },
+      controller: this,
+    ),
+  });
 
   @action
   void increment(int value) {
-
+    map['John']!['age'] = map['John']!['age']! + value;
   }
 
   @override

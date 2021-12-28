@@ -89,15 +89,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("John age: ${state.map['john']?['age']}"),
-                        Text("John weight: ${state.map['john']?['weight']}"),
+                        Text("John age: ${state.map['John']?['age']}"),
+                        Text("John weight: ${state.map['John']?['weight']}"),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Michael age: ${state.map['michael']?['age']}"),
-                        Text("Michael weight: ${state.map['michael']?['weight']}"),
+                        Text("Jim age: ${state.map['Jim']?['age']}"),
+                        Text("Jim weight: ${state.map['Jim']?['weight']}"),
                       ],
                     ),
                   ]
