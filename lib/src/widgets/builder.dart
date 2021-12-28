@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'controller.dart';
+import '../controller/controller.dart';
 
 class NexusBuilder extends StatefulWidget {
   final NexusController controller;

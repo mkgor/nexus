@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:nexus/src/state_event.dart';
+import 'package:nexus/src/stream_singleton.dart';
 
-import 'async_action.dart';
-import 'builder.dart';
+import '../async_action.dart';
+import '../widgets/builder.dart';
 
 typedef NexusReaction = void Function(dynamic, dynamic);
 
@@ -17,6 +19,8 @@ abstract class NexusController {
   bool _dirty = false;
 
   bool get dirty => _dirty;
+
+  BuildContext get context => _builderStateList.last.context;
 
   set builderStateList(State<NexusBuilder> builderState) {
     _builderStateList.add(builderState);

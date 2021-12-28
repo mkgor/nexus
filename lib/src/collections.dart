@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
-import 'controller.dart';
+import 'controller/controller.dart';
 
 extension ListExtension<T> on List<T> {
   ReactiveList<T> toReactive(
