@@ -20,11 +20,17 @@
 | Unit-tests | |
 | Saving and restoring state from cache |  |
 
+## Quickstart
+
+States in Nexus can be really simple and elegant
+![Tiny state](https://i.imgur.com/U2u9sPT.png)
+
 ## Global event bus
 
 Nexus are tracking all controllers and can notify you, when something happens via global event bus
 
 It supports next events:
+
 * EventType.stateInitialized
 * EventType.stateUpdated
 * EventType.stateDisposed
