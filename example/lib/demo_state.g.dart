@@ -8,14 +8,14 @@ part of 'demo_state.dart';
 
 mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   @override
-  set counter(int newValue) {
-    if (counter != newValue) {
-      var oldValue = counter;
-      super.counter = newValue;
+  set _counter(int newValue) {
+    if (_counter != newValue) {
+      var oldValue = _counter;
+      super._counter = newValue;
 
       markNeedsUpdate();
 
-      initiateReactionsForVariable('counter', oldValue, newValue);
+      initiateReactionsForVariable('_counter', oldValue, newValue);
     }
   }
 

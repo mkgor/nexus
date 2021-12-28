@@ -8,7 +8,9 @@ class DemoState = DemoStateBase with _$DemoStateBaseMixin;
 @NexusState()
 abstract class DemoStateBase extends NexusController {
   @Reactive()
-  int counter = 0;
+  int _counter = 0;
+
+  int get counter => _counter;
 
   @Reactive()
   bool flag = false;
@@ -38,8 +40,11 @@ abstract class DemoStateBase extends NexusController {
     ),
   });
 
+
+
   @action
   void increment(int value) {
+    _counter += 1;
     map['John']!['age'] = map['John']!['age']! + value;
   }
 
