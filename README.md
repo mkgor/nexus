@@ -17,6 +17,7 @@
 | Access to context from state |  :white_check_mark: |
 | Processable controller and widget (contains reactive content state) |  :white_check_mark: |
 | Global state's stream (tracks all lifecycle of states) | :white_check_mark: |
+| Mutators | WIP |
 | Unit-tests | |
 | Saving and restoring state from cache |  |
 
