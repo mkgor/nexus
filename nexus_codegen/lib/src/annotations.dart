@@ -1,6 +1,9 @@
-
 class NexusState {
   const NexusState();
+}
+
+class NexusObject {
+  const NexusObject();
 }
 
 class Reactive {

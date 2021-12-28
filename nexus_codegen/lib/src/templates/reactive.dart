@@ -2,11 +2,13 @@ class ReactiveTemplate {
   final String type;
   final String name;
   final bool disableReactions;
+  final bool generateForReactiveObject;
 
   ReactiveTemplate({
     required this.type,
     required this.name,
-    required this.disableReactions
+    required this.disableReactions,
+    required this.generateForReactiveObject
   });
 
   @override
@@ -18,10 +20,11 @@ set $name($type newValue) {
      var oldValue = $name;
      super.$name = newValue;
 
-     markNeedsUpdate();
+     ${generateForReactiveObject ? "controller?." : ""}markNeedsUpdate();
      
-     ${!disableReactions ? "initiateReactionsForVariable('$name', oldValue, newValue);" : ""}
+     ${!disableReactions ? "${generateForReactiveObject ? "controller?." : ""}initiateReactionsForVariable('$name', oldValue, newValue);" : ""}
    }
-}""";
+}
+""";
   }
 }

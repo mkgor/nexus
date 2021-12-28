@@ -10,6 +10,7 @@ import 'package:nexus_codegen/src/templates/action.dart';
 import 'package:nexus_codegen/src/templates/method.dart';
 import 'package:nexus_codegen/src/templates/reactive.dart';
 import 'package:nexus_codegen/src/templates/reactive_collection.dart';
+import 'package:nexus_codegen/src/templates/reactive_object.dart';
 import 'package:nexus_codegen/src/templates/state.dart';
 import 'package:nexus_codegen/src/utils.dart';
 import 'package:source_gen/source_gen.dart';
@@ -32,9 +33,10 @@ class NexusGenerator extends GeneratorForAnnotation<NexusState> {
 
     if (element.supertype?.element != null) {
       return StateTemplate(
-          name: element.name,
-          reactiveTemplates: visitor.reactiveFields,
-          actionTemplates: visitor.actions)
+              name: element.name,
+              superclass: "NexusController",
+              reactiveTemplates: visitor.reactiveFields,
+              actionTemplates: visitor.actions)
           .toString();
     } else {
       throw Exception(
@@ -72,19 +74,39 @@ class StateVisitor extends SimpleElementVisitor {
 
       var _isReactionsDisabled = _reactiveAnnotation.read("disableReactions").boolValue;
 
-      if (_typeWithoutGeneric == "ReactiveList") {
+      if (["ReactiveList", "ReactiveSet", "ReactiveMap"].contains(_typeWithoutGeneric)) {
         template = ReactiveCollectionTemplate(
-            type: element.type.getDisplayString(withNullability: true),
-            name: element.name,
-            genericType: _getGeneric(element.type),
-            disableReactions: _isReactionsDisabled,
-        );
-      } else {
-        template = ReactiveTemplate(
           type: element.type.getDisplayString(withNullability: true),
           name: element.name,
-          disableReactions: _isReactionsDisabled
+          genericType: _getGeneric(element.type),
+          disableReactions: _isReactionsDisabled,
+          generateForReactiveObject: false,
         );
+      } else {
+        bool isReactiveObject = false;
+
+        for (var type in (element.type.element as ClassElement).allSupertypes) {
+          if (type.getDisplayString(withNullability: false) == "ReactiveObject") {
+            isReactiveObject = true;
+
+            break;
+          }
+        }
+
+        if (isReactiveObject) {
+          template = ReactiveObjectTemplate(
+            type: element.type.getDisplayString(withNullability: true),
+            name: element.name,
+            disableReactions: _isReactionsDisabled,
+          );
+        } else {
+          template = ReactiveTemplate(
+            type: element.type.getDisplayString(withNullability: true),
+            name: element.name,
+            disableReactions: _isReactionsDisabled,
+            generateForReactiveObject: false,
+          );
+        }
       }
 
       _reactiveFields.add(template);

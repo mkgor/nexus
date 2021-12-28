@@ -1,3 +1,4 @@
+import 'package:example/reactive_object.dart';
 import 'package:nexus/nexus.dart';
 import 'package:nexus_codegen/nexus_codegen.dart';
 
@@ -8,7 +9,9 @@ class DemoState = DemoStateBase with _$DemoStateBaseMixin;
 @NexusState()
 abstract class DemoStateBase extends NexusController {
   @Reactive()
-  int counter = 0;
+  int _counter = 0;
+
+  int get counter => _counter;
 
   @Reactive()
   bool flag = false;
@@ -16,11 +19,37 @@ abstract class DemoStateBase extends NexusController {
   @Reactive(disableReactions: true)
   ReactiveList<int> intList = ReactiveList<int>();
 
+  @Reactive()
+  ReactiveSet<String> stringList = ReactiveSet<String>();
+
+  @Reactive()
+  User reactiveUser = User("John", 56);
+
+  @Reactive()
+  late ReactiveMap<String, ReactiveMap<String, int>> map =
+      ReactiveMap<String, ReactiveMap<String, int>>.of({
+    'John': ReactiveMap<String, int>.of(
+      {
+        "age": 12,
+        "weight": 80,
+      },
+      controller: this,
+    ),
+    'Jim': ReactiveMap<String, int>.of(
+      {
+        "age": 16,
+        "weight": 85,
+      },
+      controller: this,
+    ),
+  });
+
   @action
   void increment(int value) {
-    counter += value;
+    _counter += 1;
+    map['John']!['age'] = map['John']!['age']! + value;
 
-    intList = [1,2,3].toReactiveList();
+    reactiveUser.weight++;
   }
 
   @override

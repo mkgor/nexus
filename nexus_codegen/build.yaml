@@ -3,11 +3,20 @@ targets:
     builders:
       nexus_codegen|nexus_codegenerator:
         enabled: true
+      nexus_object_codegen|nexus_object_codegenerator:
+        enabled: true
 
 builders:
-  mapper_generator:
+  nexus_codegen:
     import: "package:nexus_codegen/builder.dart"
     builder_factories: ["nexusCodeGenerator"]
+    build_extensions: {".dart": [".g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+  nexus_object_codegen:
+    import: "package:nexus_codegen/builder.dart"
+    builder_factories: ["nexusObjectCodeGenerator"]
     build_extensions: {".dart": [".g.part"]}
     auto_apply: dependents
     build_to: cache

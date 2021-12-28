@@ -8,14 +8,14 @@ part of 'demo_state.dart';
 
 mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   @override
-  set counter(int newValue) {
-    if (counter != newValue) {
-      var oldValue = counter;
-      super.counter = newValue;
+  set _counter(int newValue) {
+    if (_counter != newValue) {
+      var oldValue = _counter;
+      super._counter = newValue;
 
       markNeedsUpdate();
 
-      initiateReactionsForVariable('counter', oldValue, newValue);
+      initiateReactionsForVariable('_counter', oldValue, newValue);
     }
   }
 
@@ -26,6 +26,8 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
       super.flag = newValue;
 
       markNeedsUpdate();
+
+      initiateReactionsForVariable('flag', oldValue, newValue);
     }
   }
 
@@ -57,6 +59,83 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
       markNeedsUpdate();
 
       initiateReactionsForVariable('intList', oldValue, newValue);
+    }
+  }
+
+  bool _$stringListGate = false;
+
+  ReactiveSet<String> _getWrappedstringList() {
+    _$stringListGate = true;
+
+    final result = this.stringList.wrap<String>(
+        controller: this, variableName: 'stringList', disableReactions: false);
+
+    _$stringListGate = false;
+
+    return result;
+  }
+
+  late ReactiveSet<String> _$stringList = _getWrappedstringList();
+
+  @override
+  get stringList => !_$stringListGate ? _$stringList : super.stringList;
+
+  @override
+  set stringList(ReactiveSet<String> newValue) {
+    if (stringList != newValue) {
+      var oldValue = stringList;
+      super.stringList = newValue;
+      _$stringList = _getWrappedstringList();
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('stringList', oldValue, newValue);
+    }
+  }
+
+  @override
+  get reactiveUser => super.reactiveUser..controller = this;
+
+  @override
+  set reactiveUser(User newValue) {
+    if (reactiveUser != newValue) {
+      var oldValue = reactiveUser;
+      super.reactiveUser = newValue..controller = this;
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('reactiveUser', oldValue, newValue);
+    }
+  }
+
+  bool _$mapGate = false;
+
+  ReactiveMap<String, ReactiveMap<String, int>> _getWrappedmap() {
+    _$mapGate = true;
+
+    final result = this.map.wrap<String, ReactiveMap<String, int>>(
+        controller: this, variableName: 'map', disableReactions: false);
+
+    _$mapGate = false;
+
+    return result;
+  }
+
+  late ReactiveMap<String, ReactiveMap<String, int>> _$map = _getWrappedmap();
+
+  @override
+  get map => !_$mapGate ? _$map : super.map;
+
+  @override
+  set map(ReactiveMap<String, ReactiveMap<String, int>> newValue) {
+    if (map != newValue) {
+      var oldValue = map;
+      super.map = newValue;
+      _$map = _getWrappedmap();
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('map', oldValue, newValue);
     }
   }
 

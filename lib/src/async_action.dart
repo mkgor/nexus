@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'controller.dart';
+import 'controller/controller.dart';
 
 class NexusAsyncAction {
   final NexusController _controllerInstance;
