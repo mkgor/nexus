@@ -3,11 +3,13 @@ import 'package:nexus_codegen/src/templates/reactive.dart';
 
 class StateTemplate {
   final String name;
+  final String superclass;
   final List<ReactiveTemplate>? reactiveTemplates;
   final List<ActionTemplate>? actionTemplates;
 
   StateTemplate({
     required this.name,
+    required this.superclass,
     this.reactiveTemplates,
     this.actionTemplates
   });
@@ -15,9 +17,10 @@ class StateTemplate {
   @override
   String toString() {
     return """
-mixin _\$${name}Mixin on $name, NexusController {
-  ${reactiveTemplates?.join("\n").toString()}\n
-  ${actionTemplates?.join("\n").toString()}
-}""";
+mixin _\$${name}Mixin on $name, $superclass {
+  ${reactiveTemplates != null ? reactiveTemplates?.join("\n").toString() : ""}\n
+  ${actionTemplates != null ? actionTemplates?.join("\n").toString() : ""}
+}
+""";
   }
 }

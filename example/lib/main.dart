@@ -104,6 +104,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            NexusBuilder(
+              controller: state,
+              builder: (BuildContext context) {
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("${state.reactiveUser.name}'s weight is: ${state.reactiveUser.weight}")
+                    ]
+                );
+              },
+            ),
           ],
         ),
       ),

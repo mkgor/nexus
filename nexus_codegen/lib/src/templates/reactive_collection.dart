@@ -7,8 +7,9 @@ class ReactiveCollectionTemplate extends ReactiveTemplate {
     required String type,
     required String name,
     required bool disableReactions,
+    required bool generateForReactiveObject,
     this.genericType,
-  }) : super(type: type, name: name, disableReactions: disableReactions);
+  }) : super(type: type, name: name, disableReactions: disableReactions, generateForReactiveObject: generateForReactiveObject);
 
   @override
   String toString() {
@@ -37,9 +38,9 @@ class ReactiveCollectionTemplate extends ReactiveTemplate {
       super.$name = newValue;
       _\$$name = _getWrapped$name();
 
-      markNeedsUpdate();
+      ${generateForReactiveObject ? "controller?." : ""}markNeedsUpdate();
 
-      initiateReactionsForVariable('$name', oldValue, newValue);
+      ${generateForReactiveObject ? "controller?." : ""}initiateReactionsForVariable('$name', oldValue, newValue);
     }
   }""";
   }

@@ -1,3 +1,4 @@
+import 'package:example/reactive_object.dart';
 import 'package:nexus/nexus.dart';
 import 'package:nexus_codegen/nexus_codegen.dart';
 
@@ -22,6 +23,9 @@ abstract class DemoStateBase extends NexusController {
   ReactiveSet<String> stringList = ReactiveSet<String>();
 
   @Reactive()
+  User reactiveUser = User("John", 56);
+
+  @Reactive()
   late ReactiveMap<String, ReactiveMap<String, int>> map =
       ReactiveMap<String, ReactiveMap<String, int>>.of({
     'John': ReactiveMap<String, int>.of(
@@ -40,12 +44,12 @@ abstract class DemoStateBase extends NexusController {
     ),
   });
 
-
-
   @action
   void increment(int value) {
     _counter += 1;
     map['John']!['age'] = map['John']!['age']! + value;
+
+    reactiveUser.weight++;
   }
 
   @override

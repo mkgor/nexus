@@ -93,6 +93,21 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
     }
   }
 
+  @override
+  get reactiveUser => super.reactiveUser..controller = this;
+
+  @override
+  set reactiveUser(User newValue) {
+    if (reactiveUser != newValue) {
+      var oldValue = reactiveUser;
+      super.reactiveUser = newValue..controller = this;
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('reactiveUser', oldValue, newValue);
+    }
+  }
+
   bool _$mapGate = false;
 
   ReactiveMap<String, ReactiveMap<String, int>> _getWrappedmap() {
