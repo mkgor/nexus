@@ -19,3 +19,19 @@
 | Global state's stream (tracks all lifecycle of states) | :white_check_mark: |
 | Unit-tests | |
 | Saving and restoring state from cache |  |
+
+## Global event bus
+
+Nexus are tracking all controllers and can notify you, when something happens via global event bus
+
+It supports next events:
+* EventType.stateInitialized
+* EventType.stateUpdated
+* EventType.stateDisposed
+* EventType.reactionRegistered
+* EventType.reactionInitiated
+* EventType.reactionRemoved
+* EventType.performedAction
+* EventType.performedAsyncAction
+
+All events' payloads contain **stateId** - unique identifier of NexusController (you can pass it manually by invoking super constructor of controller)
