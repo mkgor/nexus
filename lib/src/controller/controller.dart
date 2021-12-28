@@ -12,13 +12,13 @@ abstract class NexusController {
     init();
   }
 
-  List<State<NexusBuilder>> _builderStateList = [];
-
   Map<String, Map<String, NexusReaction>> _reactions = {};
 
   bool _dirty = false;
 
   bool get dirty => _dirty;
+
+  List<State<NexusBuilder>> _builderStateList = [];
 
   BuildContext get context => _builderStateList.last.context;
 
@@ -26,6 +26,8 @@ abstract class NexusController {
     _builderStateList.add(builderState);
   }
 
+  /// Adding reaction for [variableName] with id [reactionId]
+  ///
   void addReaction({
     required String variableName,
     required String reactionId,
@@ -38,6 +40,8 @@ abstract class NexusController {
     }
   }
 
+  /// Removing reaction for [variableName] by [reactionId]
+  ///
   void removeReaction({
     required String variableName,
     required String reactionId,
@@ -57,12 +61,19 @@ abstract class NexusController {
     }
   }
 
+  /// Initiate reactions for variable with name [variableName]
+  /// Reactions are list of [NexusReaction]
+  ///
+  /// All [NexusReaction] calling with old value and new value
+  ///
+  /// It is not allowed to modify reactive variable in reaction, it will call
+  /// [StackOverflowError]
   void initiateReactionsForVariable(
     String? variableName,
     dynamic oldValue,
     dynamic newValue,
   ) {
-    if (variableName == null || !_reactions.containsKey(variableName)) {
+    if (variableName == null || !_reactions.containsKey(variableName) || oldValue == newValue) {
       return;
     }
 
@@ -74,8 +85,16 @@ abstract class NexusController {
             "caused by modifying reactive variables in reaction (reactionId: $key)");
       }
     });
+
+    onUpdate(oldValue, newValue);
   }
 
+  /// Marks all builder's elements in registered builders list as needs rebuild
+  ///
+  /// You can call it manually, but it is highly recommended to use nexus_codegen
+  /// when constructing reactive state.
+  ///
+  /// Calling builder widget's rebuild
   void update() {
     List<State<NexusBuilder>> _unmountedBuildersList = [];
 
@@ -96,10 +115,11 @@ abstract class NexusController {
     _unmountedBuildersList.clear();
 
     _dirty = false;
-
-    onUpdate.call();
   }
 
+  /// Performs synchronous action
+  ///
+  /// Runs arbitrary code in current zone and returns its result
   void performAction(Function fn) {
     final _actionResult = fn.call();
 
@@ -108,6 +128,9 @@ abstract class NexusController {
     return _actionResult;
   }
 
+  /// Performs asynchronous action
+  ///
+  /// Runs arbitrary code in zone and returns its result
   void performAsyncAction(Future Function() fn) async {
     final _nexusAsyncAction = NexusAsyncAction(this);
 
@@ -116,12 +139,25 @@ abstract class NexusController {
     return _actionResult;
   }
 
+  /// Marks that the controller needs update
+  ///
+  /// It means when method, which annotated by @action is finished its work,
+  /// [NexusController.update] will be invoked
+  ///
+  /// It allows to modify several reactive variables, but update state once
   void markNeedsUpdate() => _dirty = true;
 
+  /// Calling when NexusController initializing
   void init() => {};
 
-  void onUpdate() => {};
+  /// Calling when updating reactive variable
+  ///
+  /// Will not be invoked, if reactions are disabled
+  void onUpdate(dynamic oldValue, dynamic newValue) => {};
 
+  /// Called when state is disposing
+  ///
+  /// Don't forget to call super.dispose() when overriding it
   @mustCallSuper
   void dispose() {
     _builderStateList.clear();
