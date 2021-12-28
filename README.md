@@ -25,6 +25,8 @@
 States in Nexus can be really simple and elegant
 ![Tiny state](https://i.imgur.com/U2u9sPT.png)
 
+But it is not fully reactive state, we call update() manually when updating counter, but what if we add some **annotations**?
+![Annotations](https://i.imgur.com/KFILTpJ.png)
 ## Global event bus
 
 Nexus are tracking all controllers and can notify you, when something happens via global event bus
