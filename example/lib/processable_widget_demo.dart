@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'processable_state.dart';
 import 'package:nexus/nexus.dart';
 
-class ProcessableWidgetDemo extends ProcessableWidget {
+class ProcessableWidgetDemo extends ProcessableWidget<ProcessableState> {
   ProcessableWidgetDemo({
     Key? key,
-    required ProcessableNexusController controller,
+    required ProcessableState controller,
   }) : super(key: key, controller: controller);
 
   @override

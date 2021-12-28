@@ -3,12 +3,13 @@ import 'package:nexus/nexus.dart';
 import 'package:nexus/src/controller/content_state_controller.dart';
 import 'package:nexus/src/controller/processable_controller.dart';
 
-abstract class ProcessableWidget extends StatelessWidget {
-  final ProcessableNexusController controller;
+abstract class ProcessableWidget<T extends ProcessableNexusController>
+    extends StatelessWidget {
+  final T controller;
 
   ProcessableWidget({Key? key, required this.controller})
       : super(key: key) {
-    init.call(controller.context);
+    init.call();
   }
 
   @override
@@ -44,5 +45,5 @@ abstract class ProcessableWidget extends StatelessWidget {
 
   Widget empty(BuildContext context);
 
-  void init(BuildContext context) => {};
+  void init() => {};
 }
