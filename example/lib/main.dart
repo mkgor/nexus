@@ -1,3 +1,5 @@
+import 'package:example/processable_state.dart';
+import 'package:example/processable_widget_demo.dart';
 import 'package:flutter/material.dart';
 import 'demo_state.dart';
 
@@ -32,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final state = DemoState();
+  final processableState = ProcessableState();
 
   @override
   Widget build(BuildContext context) {
@@ -115,12 +118,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            ProcessableWidgetDemo(controller: processableState)
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',
-        onPressed: () => state.increment(4),
+        onPressed: () => processableState.changeMode(),
         child: Icon(Icons.add),
       ),
     );
