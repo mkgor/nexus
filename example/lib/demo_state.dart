@@ -8,6 +8,8 @@ class DemoState = DemoStateBase with _$DemoStateBaseMixin;
 
 @NexusState()
 abstract class DemoStateBase extends NexusController {
+
+
   @Reactive()
   int _counter = 0;
 
@@ -56,19 +58,52 @@ abstract class DemoStateBase extends NexusController {
   void init() {
     super.init();
 
+    print("Demo state have id: $stateId");
+
+    NexusStreamSingleton().stream.listen((event) {
+      print("Event type: ${event.type} ${event.payload.stateId}");
+
+      switch (event.type) {
+
+        case EventType.stateInitialized:
+          // TODO: Handle this case.
+          break;
+        case EventType.stateUpdated:
+          StateUpdatedPayload payload = event.payload as StateUpdatedPayload;
+
+          print("Variable ${payload.variableName} was updated! Old value: ${payload.oldValue} new value: ${payload.newValue}");
+          break;
+        case EventType.stateDisposed:
+          // TODO: Handle this case.
+          break;
+        case EventType.reactionRegistered:
+          // TODO: Handle this case.
+          break;
+        case EventType.reactionInitiated:
+          // TODO: Handle this case.
+          break;
+        case EventType.reactionRemoved:
+          // TODO: Handle this case.
+          break;
+        case EventType.performedAction:
+          // TODO: Handle this case.
+          break;
+        case EventType.performedAsyncAction:
+          // TODO: Handle this case.
+          break;
+      }
+    });
+
     addReaction(
-      variableName: 'intList',
+      variableName: '_counter',
       reactionId: 'react_on_modify',
       reaction: (oldValue, newValue) {
         print("Old value was: $oldValue, new value: $newValue");
       }
     );
+
+    removeReaction(variableName: '_counter', reactionId: 'react_on_modify');
   }
 
-  @override
-  void onUpdate() {
-    super.onUpdate();
-
-    print('State was updated!');
-  }
+  DemoStateBase({String? stateId}) : super(stateId: stateId);
 }

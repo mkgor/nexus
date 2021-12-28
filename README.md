@@ -16,6 +16,6 @@
 | Custom reactive objects |  :white_check_mark: |
 | Access to context from state |  :white_check_mark: |
 | Processable controller and widget (contains reactive content state) |  :white_check_mark: |
-| Global state's stream (tracks all lifecycle of states) | WIP |
+| Global state's stream (tracks all lifecycle of states) | :white_check_mark: |
 | Unit-tests | |
 | Saving and restoring state from cache |  |

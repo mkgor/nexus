@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',
-        onPressed: () => processableState.changeMode(),
+        onPressed: () => state.increment(4),
         child: Icon(Icons.add),
       ),
     );
