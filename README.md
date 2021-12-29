@@ -20,7 +20,8 @@
 | Mutators | :white_check_mark: |
 | Guards | :white_check_mark: |
 | Unit-tests | WIP |
-| Saving and restoring state from cache |  |
+| Documentation | WIP |
+| Final refactoring |  |
 
 ## Quickstart
 
