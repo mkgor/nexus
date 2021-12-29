@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:nexus/src/state_event.dart';
+import 'package:nexus/src/events.dart';
 
 class NexusStreamSingleton {
   static final NexusStreamSingleton _singleton =
@@ -15,7 +15,9 @@ class NexusStreamSingleton {
   final StreamController<NexusStateEvent> streamController =
       StreamController<NexusStateEvent>();
 
-  Stream<NexusStateEvent> get stream => streamController.stream;
+  late Stream<NexusStateEvent> _stream = streamController.stream.asBroadcastStream();
+
+  Stream<NexusStateEvent> get stream => _stream;
 
   void emit(EventType type, dynamic payload) => streamController.add(NexusStateEvent(type: type, payload: payload));
   void close() => streamController.close();

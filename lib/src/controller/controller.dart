@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:nexus/src/state_event.dart';
+import 'package:nexus/src/events.dart';
 import 'package:nexus/src/stream_singleton.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -21,13 +22,19 @@ abstract class NexusController {
     init();
   }
 
+  final StreamController<NexusStateEvent> _logStreamController = StreamController();
+
   Map<String, Map<String, NexusReaction>> _reactions = {};
+
+  List<State<NexusBuilder>> _builderStateList = [];
 
   bool _dirty = false;
 
   bool get dirty => _dirty;
 
-  List<State<NexusBuilder>> _builderStateList = [];
+  late Stream<NexusStateEvent> _logStream = _logStreamController.stream.asBroadcastStream();
+
+  Stream<NexusStateEvent> get logStream => _logStream;
 
   BuildContext? get context =>
       _builderStateList.isNotEmpty ? _builderStateList.last.context : null;
@@ -219,6 +226,11 @@ abstract class NexusController {
   /// Calling when NexusController initializing
   @mustCallSuper
   void init() {
+    NexusStreamSingleton().stream.listen((event) {
+      if(event.payload.stateId == stateId && !_logStreamController.isClosed)
+        _logStreamController.add(event);
+    });
+
     NexusStreamSingleton().emit(
       EventType.stateInitialized,
       StateInitializedPayload(
@@ -245,5 +257,7 @@ abstract class NexusController {
       EventType.stateDisposed,
       StateDisposedPayload(stateId, context: context),
     );
+
+    _logStreamController.close();
   }
 }
