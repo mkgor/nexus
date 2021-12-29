@@ -3,18 +3,23 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
+import '../nexus.dart';
 import 'controller/controller.dart';
 
 extension ListExtension<T> on List<T> {
   ReactiveList<T> toReactive(
           {NexusController? controller,
           String? variableName,
-          bool disableReactions = false}) =>
+          bool disableReactions = false,
+          List<Mutator>? mutators,
+          bool dataSafeMutations = true}) =>
       ReactiveList<T>.of(
         this,
         controller: controller,
         variableName: variableName,
         disableReactions: disableReactions,
+        mutators: mutators,
+        dataSafeMutations: dataSafeMutations,
       );
 }
 
@@ -48,33 +53,59 @@ class ReactiveList<T> with ListMixin<T> {
   ReactiveList(
       {NexusController? controller,
       String? variableName,
-      bool? disableReactions})
+      bool? disableReactions,
+      List<Mutator>? mutators,
+      bool dataSafeMutations = true})
       : _list = <T>[],
         _variableName = variableName,
         _controller = controller,
-        _disableReactions = disableReactions ?? false;
+        _disableReactions = disableReactions ?? false,
+        _mutators = mutators ?? [],
+        _dataSafeMutations = dataSafeMutations;
 
   ReactiveList.of(Iterable<T> elements,
       {NexusController? controller,
       String? variableName,
-      bool? disableReactions})
+      bool? disableReactions,
+      List<Mutator>? mutators,
+      bool dataSafeMutations = true})
       : _list = List<T>.from(elements),
         _variableName = variableName,
         _controller = controller,
-        _disableReactions = disableReactions ?? false;
+        _disableReactions = disableReactions ?? false,
+        _mutators = mutators ?? [],
+        _dataSafeMutations = dataSafeMutations {
+    if (_mutators != null && _mutators!.isNotEmpty) {
+      for (var key in _list.asMap().keys) {
+        T result = _list[key];
+
+        for (var mutator in _mutators!) {
+          result = mutator.mutate(result);
+        }
+
+        _list[key] = result;
+      }
+    }
+  }
 
   ReactiveList<T> wrap<T>(
           {required NexusController controller,
           String? variableName,
-          bool? disableReactions}) =>
-      ReactiveList<T>.of(
-        _list as Iterable<T>,
-        controller: controller,
-        variableName: variableName,
-        disableReactions: disableReactions,
-      );
+          bool? disableReactions,
+          List<Mutator>? mutators,
+          bool dataSafeMutations = true}) =>
+      ReactiveList<T>.of(_list as Iterable<T>,
+          controller: controller,
+          variableName: variableName,
+          disableReactions: disableReactions,
+          mutators: mutators,
+          dataSafeMutations: dataSafeMutations);
 
   final List<T> _list;
+
+  final List<Mutator>? _mutators;
+
+  final bool _dataSafeMutations;
 
   bool _disableReactions = false;
 
@@ -95,11 +126,31 @@ class ReactiveList<T> with ListMixin<T> {
   }
 
   @override
-  T operator [](int index) => _list[index];
+  T operator [](int index) {
+    if (_dataSafeMutations) {
+      T mutatedValue = _list[index];
+
+      if (_mutators != null && _mutators!.isNotEmpty) {
+        for (var mutator in _mutators!) {
+          mutatedValue = mutator.mutate(mutatedValue);
+        }
+      }
+
+      return mutatedValue;
+    } else {
+      return _list[index];
+    }
+  }
 
   @override
   void operator []=(int index, T value) {
     final oldValue = _list[index];
+
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
 
     if (oldValue != value) {
       _list[index] = value;
@@ -122,6 +173,12 @@ class ReactiveList<T> with ListMixin<T> {
 
     if (!_disableReactions) _oldList = List.from(_list);
 
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
+
     _list.add(value);
 
     if (!_disableReactions)
@@ -132,12 +189,22 @@ class ReactiveList<T> with ListMixin<T> {
 
   @override
   void addAll(Iterable<T> iterable) {
+    var _listIterable = iterable.toList();
+
     if (iterable.isNotEmpty) {
       late List _oldList;
 
       if (!_disableReactions) _oldList = List.from(_list);
 
-      _list.addAll(iterable);
+      if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+        for (var key in iterable.toList().asMap().keys) {
+          for (var mutator in _mutators!) {
+            _listIterable[key] = mutator.mutate(_listIterable[key]);
+          }
+        }
+      }
+
+      _list.addAll(_listIterable);
 
       if (!_disableReactions)
         _controller?.initiateReactionsForVariable(
@@ -170,6 +237,12 @@ class ReactiveList<T> with ListMixin<T> {
 
       if (!_disableReactions) _oldList = List.from(_list);
 
+      if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+        for (var mutator in _mutators!) {
+          fillValue = mutator.mutate(fillValue);
+        }
+      }
+
       _list.fillRange(start, end, fillValue);
 
       if (!_disableReactions)
@@ -185,6 +258,12 @@ class ReactiveList<T> with ListMixin<T> {
 
     if (!_disableReactions) _oldList = List.from(_list);
 
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        element = mutator.mutate(element);
+      }
+    }
+
     _list.insert(index, element);
 
     if (!_disableReactions)
@@ -194,12 +273,22 @@ class ReactiveList<T> with ListMixin<T> {
 
   @override
   void insertAll(int index, Iterable<T> iterable) {
+    var _listIterable = iterable.toList();
+
     if (iterable.isNotEmpty) {
       late List _oldList;
 
       if (!_disableReactions) _oldList = List.from(_list);
 
-      _list.insertAll(index, iterable);
+      if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+        for (var key in iterable.toList().asMap().keys) {
+          for (var mutator in _mutators!) {
+            _listIterable[key] = mutator.mutate(_listIterable[key]);
+          }
+        }
+      }
+
+      _list.insertAll(index, _listIterable);
 
       if (!_disableReactions)
         _controller?.initiateReactionsForVariable(
@@ -303,9 +392,19 @@ class ReactiveList<T> with ListMixin<T> {
   void replaceRange(int start, int end, Iterable<T> replacements) {
     late List _oldList;
 
+    var _listReplacements = replacements.toList();
+
     if (!_disableReactions) _oldList = List.from(_list);
 
-    _list.replaceRange(start, end, replacements);
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var key in replacements.toList().asMap().keys) {
+        for (var mutator in _mutators!) {
+          _listReplacements[key] = mutator.mutate(_listReplacements[key]);
+        }
+      }
+    }
+
+    _list.replaceRange(start, end, _listReplacements);
 
     if (!_disableReactions)
       _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
@@ -329,9 +428,19 @@ class ReactiveList<T> with ListMixin<T> {
   void setAll(int index, Iterable<T> iterable) {
     late List _oldList;
 
+    var _listIterable = iterable.toList();
+
     if (!_disableReactions) _oldList = List.from(_list);
 
-    _list.setAll(index, iterable);
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var key in iterable.toList().asMap().keys) {
+        for (var mutator in _mutators!) {
+          _listIterable[key] = mutator.mutate(_listIterable[key]);
+        }
+      }
+    }
+
+    _list.setAll(index, _listIterable);
 
     if (!_disableReactions)
       _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
@@ -342,9 +451,19 @@ class ReactiveList<T> with ListMixin<T> {
   void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
     late List _oldList;
 
+    var _listIterable = iterable.toList();
+
     if (!_disableReactions) _oldList = List.from(_list);
 
-    _list.setRange(start, end, iterable);
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var key in iterable.toList().asMap().keys) {
+        for (var mutator in _mutators!) {
+          _listIterable[key] = mutator.mutate(_listIterable[key]);
+        }
+      }
+    }
+
+    _list.setRange(start, end, _listIterable);
 
     if (!_disableReactions)
       _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
@@ -404,36 +523,56 @@ class ReactiveList<T> with ListMixin<T> {
 }
 
 class ReactiveSet<T> with SetMixin<T> {
-  ReactiveSet(
-      {NexusController? controller,
-      String? variableName,
-      bool? disableReactions})
-      : _set = Set<T>(),
+  ReactiveSet({
+    NexusController? controller,
+    String? variableName,
+    bool? disableReactions,
+    List<Mutator>? mutators,
+    bool dataSafeMutations = true,
+  })  : _set = Set<T>(),
         _variableName = variableName,
         _controller = controller,
-        _disableReactions = disableReactions ?? false;
+        _disableReactions = disableReactions ?? false,
+        _dataSafeMutations = dataSafeMutations,
+        _mutators = mutators ?? [];
 
-  ReactiveSet.of(Iterable<T> elements,
-      {NexusController? controller,
-      String? variableName,
-      bool? disableReactions})
-      : _set = Set<T>.from(elements),
+  ReactiveSet.of(
+    Iterable<T> elements, {
+    NexusController? controller,
+    String? variableName,
+    bool? disableReactions,
+    List<Mutator>? mutators,
+    bool dataSafeMutations = true,
+  })  : _set = Set<T>.from(elements),
         _variableName = variableName,
         _controller = controller,
-        _disableReactions = disableReactions ?? false;
+        _disableReactions = disableReactions ?? false,
+        _dataSafeMutations = dataSafeMutations,
+        _mutators = mutators ?? [] {
+    if(dataSafeMutations && mutators != null && mutators.isNotEmpty) {
+      print("[WARNING] Data safe mutations does not work for Sets");
+    }
+  }
 
-  ReactiveSet<T> wrap<T>(
-          {required NexusController controller,
-          String? variableName,
-          bool? disableReactions}) =>
-      ReactiveSet<T>.of(
-        _set as Iterable<T>,
-        controller: controller,
-        variableName: variableName,
-        disableReactions: disableReactions,
-      );
+  ReactiveSet<T> wrap<T>({
+    required NexusController controller,
+    String? variableName,
+    bool? disableReactions,
+    List<Mutator>? mutators,
+    bool dataSafeMutations = true,
+  }) =>
+      ReactiveSet<T>.of(_set as Iterable<T>,
+          controller: controller,
+          variableName: variableName,
+          disableReactions: disableReactions,
+          mutators: mutators,
+          dataSafeMutations: dataSafeMutations);
 
   final Set<T> _set;
+
+  final List<Mutator>? _mutators;
+
+  final bool _dataSafeMutations;
 
   bool _disableReactions = false;
 
@@ -448,6 +587,12 @@ class ReactiveSet<T> with SetMixin<T> {
     late Set _oldSet;
 
     if (!_disableReactions) _oldSet = Set.from(_set);
+
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
 
     _result = _set.add(value);
 
@@ -508,36 +653,54 @@ class ReactiveSet<T> with SetMixin<T> {
 }
 
 class ReactiveMap<K, V> with MapMixin<K, V> {
-  ReactiveMap(
-      {NexusController? controller,
-      String? variableName,
-      bool? disableReactions})
-      : _map = <K, V>{},
+  ReactiveMap({
+    NexusController? controller,
+    String? variableName,
+    bool? disableReactions,
+    List<Mutator>? mutators,
+    bool dataSafeMutations = true,
+  })  : _map = <K, V>{},
         _variableName = variableName,
         _controller = controller,
-        _disableReactions = disableReactions ?? false;
+        _disableReactions = disableReactions ?? false,
+        _mutators = mutators ?? [],
+        _dataSafeMutations = dataSafeMutations;
 
-  ReactiveMap.of(Map<K, V> elements,
-      {NexusController? controller,
-      String? variableName,
-      bool? disableReactions})
-      : _map = Map<K, V>.from(elements),
+  ReactiveMap.of(
+    Map<K, V> elements, {
+    NexusController? controller,
+    String? variableName,
+    bool? disableReactions,
+    List<Mutator>? mutators,
+    bool dataSafeMutations = true,
+  })  : _map = Map<K, V>.from(elements),
         _variableName = variableName,
         _controller = controller,
-        _disableReactions = disableReactions ?? false;
+        _disableReactions = disableReactions ?? false,
+        _mutators = mutators ?? [],
+        _dataSafeMutations = dataSafeMutations;
 
-  ReactiveMap<K, V> wrap<K, V>(
-          {required NexusController controller,
-          String? variableName,
-          bool? disableReactions}) =>
+  ReactiveMap<K, V> wrap<K, V>({
+    required NexusController controller,
+    String? variableName,
+    bool? disableReactions,
+    List<Mutator>? mutators,
+    bool dataSafeMutations = true,
+  }) =>
       ReactiveMap<K, V>.of(
         _map as Map<K, V>,
         controller: controller,
         variableName: variableName,
         disableReactions: disableReactions,
+        mutators: mutators,
+        dataSafeMutations: dataSafeMutations
       );
 
   final Map<K, V> _map;
+
+  final List<Mutator>? _mutators;
+
+  final bool _dataSafeMutations;
 
   bool _disableReactions = false;
 
@@ -546,11 +709,31 @@ class ReactiveMap<K, V> with MapMixin<K, V> {
   String? _variableName;
 
   @override
-  V? operator [](Object? key) => _map[(key as K?)];
+  V? operator [](Object? key) {
+    if (_dataSafeMutations) {
+      V? mutatedValue = _map[(key as K?)];
+
+      if (_mutators != null && _mutators!.isNotEmpty) {
+        for (var mutator in _mutators!) {
+          mutatedValue = mutator.mutate(mutatedValue);
+        }
+      }
+
+      return mutatedValue;
+    } else {
+      return _map[(key as K?)];
+    }
+  }
 
   @override
   void operator []=(K key, V value) {
     final oldValue = _map[key];
+
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
 
     if (oldValue != value) {
       _map[key] = value;

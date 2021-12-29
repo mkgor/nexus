@@ -1,3 +1,6 @@
+import 'package:nexus/src/mutator.dart';
+import 'package:nexus/src/guard.dart';
+
 class NexusState {
   const NexusState();
 }
@@ -8,8 +11,18 @@ class NexusObject {
 
 class Reactive {
   final bool disableReactions;
+  final List<Mutator> mutators;
+  final List<Guard> guards;
+  final bool mutatorsFirst;
+  final bool dataSafeMutations;
 
-  const Reactive({this.disableReactions = false});
+  const Reactive({
+    this.disableReactions = false,
+    this.mutators = const [],
+    this.guards = const [],
+    this.mutatorsFirst = true,
+    this.dataSafeMutations = true,
+  });
 }
 
 const action = "action";

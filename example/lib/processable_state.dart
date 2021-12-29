@@ -27,4 +27,11 @@ abstract class ProcessableStateBase extends ProcessableNexusController {
 
     contentStateController.initial();
   }
+
+  @override
+  void init() {
+    super.init();
+
+    print("Processable state have id: $stateId");
+  }
 }

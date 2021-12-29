@@ -1,6 +1,11 @@
+import 'package:example/guards/name_length_guard.dart';
+import 'package:example/mutators/patronymic_name_mutator.dart';
+import 'package:example/mutators/random_int_adder_mutator.dart';
 import 'package:example/reactive_object.dart';
 import 'package:nexus/nexus.dart';
 import 'package:nexus_codegen/nexus_codegen.dart';
+
+import 'mutators/last_name_mutator.dart';
 
 part 'demo_state.g.dart';
 
@@ -16,7 +21,14 @@ abstract class DemoStateBase extends NexusController {
   @Reactive()
   bool flag = false;
 
-  @Reactive(disableReactions: true)
+  @Reactive(
+    disableReactions: true,
+    guards: [NameLengthGuard()],
+    mutators: [
+      RandomIntAdderMutator(),
+    ],
+    dataSafeMutations: false
+  )
   ReactiveList<int> intList = ReactiveList<int>();
 
   @Reactive()
@@ -24,6 +36,12 @@ abstract class DemoStateBase extends NexusController {
 
   @Reactive()
   User reactiveUser = User("John", 56);
+
+  @Reactive(
+    guards: [NameLengthGuard()],
+    mutators: [LastNameMutator(), PatronymicNameMutator()],
+  )
+  String fullName = "Joh";
 
   @Reactive()
   late ReactiveMap<String, ReactiveMap<String, int>> map =
@@ -46,29 +64,57 @@ abstract class DemoStateBase extends NexusController {
 
   @action
   void increment(int value) {
-    _counter += 1;
-    map['John']!['age'] = map['John']!['age']! + value;
-
-    reactiveUser.weight++;
+    intList.add(value);
   }
 
   @override
   void init() {
     super.init();
 
-    addReaction(
-      variableName: 'intList',
-      reactionId: 'react_on_modify',
-      reaction: (oldValue, newValue) {
-        print("Old value was: $oldValue, new value: $newValue");
+    print("Demo state have id: $stateId");
+
+    NexusStreamSingleton().stream.listen((event) {
+      print("Event type: ${event.type} ${event.payload.stateId}");
+
+      switch (event.type) {
+        case EventType.stateInitialized:
+        // TODO: Handle this case.
+          break;
+        case EventType.stateUpdated:
+          StateUpdatedPayload payload = event.payload as StateUpdatedPayload;
+
+          print("Variable ${payload.variableName} was updated! Old value: ${payload.oldValue} new value: ${payload.newValue}");
+          break;
+        case EventType.stateDisposed:
+        // TODO: Handle this case.
+          break;
+        case EventType.reactionRegistered:
+        // TODO: Handle this case.
+          break;
+        case EventType.reactionInitiated:
+        // TODO: Handle this case.
+          break;
+        case EventType.reactionRemoved:
+        // TODO: Handle this case.
+          break;
+        case EventType.performedAction:
+          // TODO: Handle this case.
+          break;
+        case EventType.performedAsyncAction:
+          // TODO: Handle this case.
+          break;
       }
-    );
+    });
+
+    addReaction(
+        variableName: '_counter',
+        reactionId: 'react_on_modify',
+        reaction: (oldValue, newValue) {
+          print("Old value was: $oldValue, new value: $newValue");
+        });
+
+    removeReaction(variableName: '_counter', reactionId: 'react_on_modify');
   }
 
-  @override
-  void onUpdate() {
-    super.onUpdate();
-
-    print('State was updated!');
-  }
+  DemoStateBase({String? stateId}) : super(stateId: stateId);
 }

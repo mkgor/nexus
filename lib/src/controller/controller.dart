@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:nexus/src/state_event.dart';
 import 'package:nexus/src/stream_singleton.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 import '../async_action.dart';
 import '../widgets/builder.dart';
@@ -8,7 +12,12 @@ import '../widgets/builder.dart';
 typedef NexusReaction = void Function(dynamic, dynamic);
 
 abstract class NexusController {
-  NexusController() {
+  late String? stateId;
+
+  NexusController({this.stateId}) {
+    stateId ??=
+        md5.convert(utf8.encode(Random().nextInt(10000).toString())).toString();
+
     init();
   }
 
@@ -20,7 +29,8 @@ abstract class NexusController {
 
   List<State<NexusBuilder>> _builderStateList = [];
 
-  BuildContext get context => _builderStateList.last.context;
+  BuildContext? get context =>
+      _builderStateList.isNotEmpty ? _builderStateList.last.context : null;
 
   set builderStateList(State<NexusBuilder> builderState) {
     _builderStateList.add(builderState);
@@ -38,6 +48,15 @@ abstract class NexusController {
     } else {
       _reactions[variableName] = {reactionId: reaction};
     }
+
+    NexusStreamSingleton().emit(
+      EventType.reactionRegistered,
+      ReactionRegisteredPayload(
+        stateId,
+        reactionId: reactionId,
+        variableName: variableName,
+      ),
+    );
   }
 
   /// Removing reaction for [variableName] by [reactionId]
@@ -58,6 +77,15 @@ abstract class NexusController {
 
     if (_reactions[variableName]!.isEmpty) {
       _reactions.remove(variableName);
+
+      NexusStreamSingleton().emit(
+        EventType.reactionRemoved,
+        ReactionRemovedPayload(
+          stateId,
+          reactionId: reactionId,
+          variableName: variableName,
+        ),
+      );
     }
   }
 
@@ -73,20 +101,45 @@ abstract class NexusController {
     dynamic oldValue,
     dynamic newValue,
   ) {
-    if (variableName == null || !_reactions.containsKey(variableName) || oldValue == newValue) {
+    if (variableName == null) return;
+
+    onUpdate(oldValue, newValue);
+
+    NexusStreamSingleton().emit(
+      EventType.stateUpdated,
+      StateUpdatedPayload(
+        stateId,
+        variableName: variableName,
+        context: context,
+        oldValue: oldValue,
+        newValue: newValue,
+      ),
+    );
+
+    if (!_reactions.containsKey(variableName) || oldValue == newValue) {
       return;
     }
 
     _reactions[variableName]?.forEach((key, value) {
       try {
+        NexusStreamSingleton().emit(
+          EventType.reactionInitiated,
+          ReactionInitiatedPayload(
+            stateId,
+            reactionId: key,
+            variableName: variableName,
+            oldValue: oldValue,
+            newValue: newValue,
+          ),
+        );
+
         value.call(oldValue, newValue);
       } on StackOverflowError {
-        throw Exception("Caught StackOverflowError when acting reaction, it may be "
+        throw Exception(
+            "Caught StackOverflowError when acting reaction, it may be "
             "caused by modifying reactive variables in reaction (reactionId: $key)");
       }
     });
-
-    onUpdate(oldValue, newValue);
   }
 
   /// Marks all builder's elements in registered builders list as needs rebuild
@@ -125,6 +178,14 @@ abstract class NexusController {
 
     if (dirty) update();
 
+    NexusStreamSingleton().emit(
+      EventType.performedAction,
+      PerformedActionPayload(
+        stateId,
+        result: _actionResult,
+      ),
+    );
+
     return _actionResult;
   }
 
@@ -135,6 +196,14 @@ abstract class NexusController {
     final _nexusAsyncAction = NexusAsyncAction(this);
 
     final _actionResult = await _nexusAsyncAction.run(fn);
+
+    NexusStreamSingleton().emit(
+      EventType.performedAsyncAction,
+      PerformedAsyncActionPayload(
+        stateId,
+        result: _actionResult,
+      ),
+    );
 
     return _actionResult;
   }
@@ -148,11 +217,21 @@ abstract class NexusController {
   void markNeedsUpdate() => _dirty = true;
 
   /// Calling when NexusController initializing
-  void init() => {};
+  @mustCallSuper
+  void init() {
+    NexusStreamSingleton().emit(
+      EventType.stateInitialized,
+      StateInitializedPayload(
+        stateId,
+        context: context,
+      ),
+    );
+  }
 
   /// Calling when updating reactive variable
   ///
   /// Will not be invoked, if reactions are disabled
+  @mustCallSuper
   void onUpdate(dynamic oldValue, dynamic newValue) => {};
 
   /// Called when state is disposing
@@ -161,5 +240,10 @@ abstract class NexusController {
   @mustCallSuper
   void dispose() {
     _builderStateList.clear();
+
+    NexusStreamSingleton().emit(
+      EventType.stateDisposed,
+      StateDisposedPayload(stateId, context: context),
+    );
   }
 }

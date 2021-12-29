@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("${state.reactiveUser.name}'s weight is: ${state.reactiveUser.weight}")
+                      Text("${state.fullName}")
                     ]
                 );
               },
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',
-        onPressed: () => processableState.changeMode(),
+        onPressed: () => state.increment(4),
         child: Icon(Icons.add),
       ),
     );
