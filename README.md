@@ -19,7 +19,7 @@
 | Global state's stream (tracks all lifecycle of states) | :white_check_mark: |
 | Mutators | :white_check_mark: |
 | Guards | :white_check_mark: |
-| Unit-tests | |
+| Unit-tests | WIP |
 | Saving and restoring state from cache |  |
 
 ## Quickstart
