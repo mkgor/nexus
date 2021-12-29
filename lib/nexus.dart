@@ -8,3 +8,5 @@ export 'src/reactive_object.dart';
 export 'src/widgets/processable_widget.dart';
 export 'src/state_event.dart';
 export 'src/stream_singleton.dart';
+export 'src/mutator.dart';
+export 'src/guard.dart';

@@ -37,7 +37,12 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
     _$intListGate = true;
 
     final result = this.intList.wrap<int>(
-        controller: this, variableName: 'intList', disableReactions: true);
+      controller: this,
+      variableName: 'intList',
+      disableReactions: true,
+      dataSafeMutations: false,
+      mutators: [RandomIntAdderMutator()],
+    );
 
     _$intListGate = false;
 
@@ -47,7 +52,16 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   late ReactiveList<int> _$intList = _getWrappedintList();
 
   @override
-  get intList => !_$intListGate ? _$intList : super.intList;
+  get intList {
+    if (!_$intListGate) {
+      /// Guards
+      NameLengthGuard().handle(_$intList);
+
+      return _$intList;
+    } else {
+      return super.intList;
+    }
+  }
 
   @override
   set intList(ReactiveList<int> newValue) {
@@ -68,7 +82,11 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
     _$stringListGate = true;
 
     final result = this.stringList.wrap<String>(
-        controller: this, variableName: 'stringList', disableReactions: false);
+          controller: this,
+          variableName: 'stringList',
+          disableReactions: false,
+          dataSafeMutations: true,
+        );
 
     _$stringListGate = false;
 
@@ -78,7 +96,13 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   late ReactiveSet<String> _$stringList = _getWrappedstringList();
 
   @override
-  get stringList => !_$stringListGate ? _$stringList : super.stringList;
+  get stringList {
+    if (!_$stringListGate) {
+      return _$stringList;
+    } else {
+      return super.stringList;
+    }
+  }
 
   @override
   set stringList(ReactiveSet<String> newValue) {
@@ -108,13 +132,43 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
     }
   }
 
+  @override
+  set fullName(String newValue) {
+    if (fullName != newValue) {
+      var oldValue = fullName;
+      super.fullName = newValue;
+
+      markNeedsUpdate();
+
+      initiateReactionsForVariable('fullName', oldValue, newValue);
+    }
+  }
+
+  @override
+  get fullName {
+    var result = super.fullName;
+
+    /// Mutators
+    result = LastNameMutator().mutate(result);
+    result = PatronymicNameMutator().mutate(result);
+
+    /// Guards
+    NameLengthGuard().handle(result);
+
+    return result;
+  }
+
   bool _$mapGate = false;
 
   ReactiveMap<String, ReactiveMap<String, int>> _getWrappedmap() {
     _$mapGate = true;
 
     final result = this.map.wrap<String, ReactiveMap<String, int>>(
-        controller: this, variableName: 'map', disableReactions: false);
+          controller: this,
+          variableName: 'map',
+          disableReactions: false,
+          dataSafeMutations: true,
+        );
 
     _$mapGate = false;
 
@@ -124,7 +178,13 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   late ReactiveMap<String, ReactiveMap<String, int>> _$map = _getWrappedmap();
 
   @override
-  get map => !_$mapGate ? _$map : super.map;
+  get map {
+    if (!_$mapGate) {
+      return _$map;
+    } else {
+      return super.map;
+    }
+  }
 
   @override
   set map(ReactiveMap<String, ReactiveMap<String, int>> newValue) {

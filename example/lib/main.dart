@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("${state.reactiveUser.name}'s weight is: ${state.reactiveUser.weight}")
+                      Text("${state.fullName}")
                     ]
                 );
               },

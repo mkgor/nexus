@@ -1,6 +1,5 @@
 library nexus_codegen;
 
-import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
@@ -73,6 +72,10 @@ class StateVisitor extends SimpleElementVisitor {
               "Reactive").computeConstantValue());
 
       var _isReactionsDisabled = _reactiveAnnotation.read("disableReactions").boolValue;
+      var _mutators = _reactiveAnnotation.read("mutators").listValue;
+      var _guards = _reactiveAnnotation.read("guards").listValue;
+      var _mutatorsFirst = _reactiveAnnotation.read("mutatorsFirst").boolValue;
+      var _dataSafeMutations = _reactiveAnnotation.read("dataSafeMutations").boolValue;
 
       if (["ReactiveList", "ReactiveSet", "ReactiveMap"].contains(_typeWithoutGeneric)) {
         template = ReactiveCollectionTemplate(
@@ -81,6 +84,9 @@ class StateVisitor extends SimpleElementVisitor {
           genericType: _getGeneric(element.type),
           disableReactions: _isReactionsDisabled,
           generateForReactiveObject: false,
+          mutators: _mutators,
+          guards: _guards,
+          dataSafeMutations: _dataSafeMutations,
         );
       } else {
         bool isReactiveObject = false;
@@ -105,6 +111,9 @@ class StateVisitor extends SimpleElementVisitor {
             name: element.name,
             disableReactions: _isReactionsDisabled,
             generateForReactiveObject: false,
+            mutators: _mutators,
+            guards: _guards,
+            mutatorsFirst: _mutatorsFirst,
           );
         }
       }
