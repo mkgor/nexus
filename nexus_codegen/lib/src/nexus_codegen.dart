@@ -91,11 +91,19 @@ class StateVisitor extends SimpleElementVisitor {
       } else {
         bool isReactiveObject = false;
 
-        for (var type in (element.type.element as ClassElement).allSupertypes) {
-          if (type.getDisplayString(withNullability: false) == "ReactiveObject") {
-            isReactiveObject = true;
+        if(element.type.element is ClassElement) {
+          var supertypes = (element.type.element as ClassElement).allSupertypes;
 
-            break;
+          if (supertypes is List<InterfaceType>) {
+            for (var type in (element.type.element as ClassElement)
+                .allSupertypes) {
+              if (type.getDisplayString(withNullability: false) ==
+                  "ReactiveObject") {
+                isReactiveObject = true;
+
+                break;
+              }
+            }
           }
         }
 
