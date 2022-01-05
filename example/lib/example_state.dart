@@ -7,12 +7,12 @@ import 'package:nexus_codegen/nexus_codegen.dart';
 
 import 'mutators/last_name_mutator.dart';
 
-part 'demo_state.g.dart';
+part 'example_state.g.dart';
 
-class DemoState = DemoStateBase with _$DemoStateBaseMixin;
+class ExampleState = ExampleStateBase with _$ExampleStateBaseMixin;
 
 @NexusState()
-abstract class DemoStateBase extends NexusController {
+abstract class ExampleStateBase extends NexusController {
   @Reactive()
   int _counter = 0;
 
@@ -21,31 +21,23 @@ abstract class DemoStateBase extends NexusController {
   @Reactive()
   bool flag = false;
 
-  @Reactive(
-    disableReactions: true,
-    guards: [NameLengthGuard()],
-    mutators: [
-      RandomIntAdderMutator(),
-    ],
-    dataSafeMutations: false
-  )
+  @Reactive()
   ReactiveList<int> intList = ReactiveList<int>();
 
   @Reactive()
   ReactiveSet<String> stringList = ReactiveSet<String>();
 
   @Reactive()
-  User reactiveUser = User("John", 56);
+  User reactiveUser = User("John", 37);
 
   @Reactive(
-    guards: [NameLengthGuard()],
-    mutators: [LastNameMutator(), PatronymicNameMutator()],
+    mutators: [LastNameMutator()]
   )
   String fullName = "Joh";
 
   @Reactive()
   late ReactiveMap<String, ReactiveMap<String, int>> map =
-      ReactiveMap<String, ReactiveMap<String, int>>.of({
+  ReactiveMap<String, ReactiveMap<String, int>>.of({
     'John': ReactiveMap<String, int>.of(
       {
         "age": 12,
@@ -71,7 +63,7 @@ abstract class DemoStateBase extends NexusController {
   void init() {
     super.init();
 
-    print("Demo state have id: $stateId");
+    print("Example state have id: $stateId");
 
     NexusStreamSingleton().stream.listen((event) {
       print("Event type: ${event.type} ${event.payload.stateId}");
@@ -96,10 +88,10 @@ abstract class DemoStateBase extends NexusController {
         // TODO: Handle this case.
           break;
         case EventType.performedAction:
-          // TODO: Handle this case.
+        // TODO: Handle this case.
           break;
         case EventType.performedAsyncAction:
-          // TODO: Handle this case.
+        // TODO: Handle this case.
           break;
       }
     });
@@ -114,5 +106,9 @@ abstract class DemoStateBase extends NexusController {
     removeReaction(variableName: '_counter', reactionId: 'react_on_modify');
   }
 
-  DemoStateBase({String? stateId}) : super(stateId: stateId);
+  ExampleStateBase({String? stateId}) : super(stateId: stateId);
+}
+
+class UserB {
+
 }
