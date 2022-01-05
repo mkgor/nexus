@@ -82,8 +82,6 @@ abstract class DemoStateBase extends NexusController {
           break;
         case EventType.stateUpdated:
           StateUpdatedPayload payload = event.payload as StateUpdatedPayload;
-
-          print("Variable ${payload.variableName} was updated! Old value: ${payload.oldValue} new value: ${payload.newValue}");
           break;
         case EventType.stateDisposed:
         // TODO: Handle this case.
