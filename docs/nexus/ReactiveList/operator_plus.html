@@ -57,7 +57,7 @@
   </ol>
 </div>
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+<span class="returntype"><a href="../../nexus/ReactiveList-class.html">ReactiveList</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
 <span class="name ">operator +</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="+-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">other</span></span></li>
 </ol>)
 
@@ -79,7 +79,7 @@ Some list types may choose to return a list of the same type as themselves
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-List&lt;T&gt; operator +(List&lt;T&gt; other) {
+ReactiveList&lt;T&gt; operator +(List&lt;T&gt; other) {
   var result = _list + other;
 
   _controller?.markNeedsUpdate();
@@ -87,7 +87,14 @@ List&lt;T&gt; operator +(List&lt;T&gt; other) {
   if (!_disableReactions)
     _controller?.initiateReactionsForVariable(_variableName, _list, result);
 
-  return result;
+  return ReactiveList.of(
+    result,
+    controller: _controller,
+    variableName: _variableName,
+    disableReactions: _disableReactions,
+    mutators: _mutators,
+    dataSafeMutations: _dataSafeMutations,
+  );
 }</code></pre>
 </section>
 
@@ -147,6 +154,7 @@ List&lt;T&gt; operator +(List&lt;T&gt; other) {
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/fold.html">fold</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/followedBy.html">followedBy</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/forEach.html">forEach</a></li>
+    <li><a href="../../nexus/ReactiveList/getMutatedList.html">getMutatedList</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/getRange.html">getRange</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/indexOf.html">indexOf</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/indexWhere.html">indexWhere</a></li>
@@ -177,6 +185,7 @@ List&lt;T&gt; operator +(List&lt;T&gt; other) {
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/take.html">take</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/takeWhile.html">takeWhile</a></li>
     <li><a href="../../nexus/ReactiveList/toList.html">toList</a></li>
+    <li><a href="../../nexus/ReactiveList/toReactiveSet.html">toReactiveSet</a></li>
     <li><a href="../../nexus/ReactiveList/toSet.html">toSet</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/toString.html">toString</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/where.html">where</a></li>

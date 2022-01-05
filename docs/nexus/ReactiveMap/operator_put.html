@@ -84,6 +84,7 @@ void operator []=(K key, V value) {
     for (var mutator in _mutators!) {
       value = mutator.mutate(value);
     }
+
   }
 
   if (oldValue != value) {

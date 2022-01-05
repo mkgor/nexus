@@ -87,10 +87,12 @@ successfully, even if it looks like it shouldn't have any effect.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-Map&lt;RK, RV&gt; cast&lt;RK, RV&gt;() =&gt; ReactiveMap.of(super.cast()).wrap(
+Map&lt;RK, RV&gt; cast&lt;RK, RV&gt;() =&gt; ReactiveMap.of(super.cast&lt;RK, RV&gt;()).wrap(
       controller: _controller!,
       variableName: _variableName,
       disableReactions: _disableReactions,
+      mutators: _mutators,
+      dataSafeMutations: _dataSafeMutations
     );</code></pre>
 </section>
 
