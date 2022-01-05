@@ -1,5 +1,5 @@
-![test coverage](https://img.shields.io/badge/coverage-49.3%25-orange)
-![test results](https://img.shields.io/badge/tests-11%20passed%2C%200%20failed-green)
+![test coverage](https://img.shields.io/badge/coverage-95.5%25-green)
+![test results](https://img.shields.io/badge/tests-16%20passed%2C%200%20failed-green)
 
 # Nexus :rocket:
 
