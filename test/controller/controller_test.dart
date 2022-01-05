@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nexus/nexus.dart';
 
@@ -26,17 +27,53 @@ void main() {
     expect(state.dirty, false);
   });
 
+  test("Controller dispose test", () {
+    var eventsStack = [
+      EventType.stateInitialized,
+      EventType.stateDisposed,
+    ];
+
+    var iterator = 0;
+    var state = DemoState();
+    var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
+
+    state.builderStateList = builder.createState();
+
+    state.logStream.listen((event) {
+      var expectedEvent = eventsStack[iterator];
+
+      expect(event.type, expectedEvent);
+
+      iterator++;
+    });
+
+    expect(state.builders.length, 1);
+
+    state.dispose();
+
+    expect(state.builders.length, 0);
+
+    expect(state.logStreamController.isClosed, true);
+  });
+
   test("Controller reactions test", () {
     var eventsStack = [
       EventType.stateInitialized,
       EventType.reactionRegistered,
-      EventType.stateUpdated,
       EventType.reactionInitiated,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.reactionRegistered,
+      EventType.reactionRemoved,
+      EventType.reactionInitiated,
+      EventType.stateUpdated,
+      EventType.performedAction,
       EventType.reactionRemoved,
     ];
 
     var iterator = 0;
     var state = DemoState();
+    var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
       var expectedEvent = eventsStack[iterator];
@@ -54,9 +91,21 @@ void main() {
           expect(newVal, 1);
         });
 
-    state.counter += 1;
+    state.performAction(() => state.counter += 1);
+
+    state.addReaction(
+        variableName: '_counter',
+        reactionId: 'test-reaction2',
+        reaction: (oldVal, newVal) {
+          expect(oldVal, 1);
+          expect(newVal, 2);
+        });
 
     state.removeReaction(variableName: '_counter', reactionId: 'test-reaction');
+
+    state.performAction(() => state.counter += 1);
+
+    state.removeReaction(variableName: '_counter', reactionId: 'test-reaction2');
   });
 
   test("Controller actions test", () {
@@ -68,6 +117,7 @@ void main() {
 
     var iterator = 0;
     var state = DemoState();
+    var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
       var expectedEvent = eventsStack[iterator];
@@ -91,6 +141,7 @@ void main() {
 
     var iterator = 0;
     var state = DemoState();
+    var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
       var expectedEvent = eventsStack[iterator];
@@ -138,3 +189,4 @@ class DemoState extends NexusController {
 
   DemoState({String? stateId}) : super(stateId: stateId);
 }
+
