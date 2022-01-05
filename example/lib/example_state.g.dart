@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'demo_state.dart';
+part of 'example_state.dart';
 
 // **************************************************************************
 // NexusGenerator
 // **************************************************************************
 
-mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
+mixin _$ExampleStateBaseMixin on ExampleStateBase, NexusController {
   @override
   set _counter(int newValue) {
     if (_counter != newValue) {
@@ -37,12 +37,11 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
     _$intListGate = true;
 
     final result = this.intList.wrap<int>(
-      controller: this,
-      variableName: 'intList',
-      disableReactions: true,
-      dataSafeMutations: false,
-      mutators: [RandomIntAdderMutator()],
-    );
+          controller: this,
+          variableName: 'intList',
+          disableReactions: false,
+          dataSafeMutations: true,
+        );
 
     _$intListGate = false;
 
@@ -54,9 +53,6 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   @override
   get intList {
     if (!_$intListGate) {
-      /// Guards
-      NameLengthGuard().handle(_$intList);
-
       return _$intList;
     } else {
       return super.intList;
@@ -118,13 +114,10 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   }
 
   @override
-  get reactiveUser => super.reactiveUser..controller = this;
-
-  @override
-  set reactiveUser(User newValue) {
+  set reactiveUser(dynamic newValue) {
     if (reactiveUser != newValue) {
       var oldValue = reactiveUser;
-      super.reactiveUser = newValue..controller = this;
+      super.reactiveUser = newValue;
 
       markNeedsUpdate();
 
@@ -150,10 +143,8 @@ mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
 
     /// Mutators
     result = LastNameMutator().mutate(result);
-    result = PatronymicNameMutator().mutate(result);
 
     /// Guards
-    NameLengthGuard().handle(result);
 
     return result;
   }

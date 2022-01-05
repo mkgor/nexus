@@ -18,8 +18,8 @@ class Reactive {
 
   const Reactive({
     this.disableReactions = false,
-    this.mutators = const [],
-    this.guards = const [],
+    this.mutators = const <Mutator>[],
+    this.guards = const <Guard>[],
     this.mutatorsFirst = true,
     this.dataSafeMutations = true,
   });

@@ -114,7 +114,7 @@ class ReactiveList<T> with ListMixin<T> {
   String? _variableName;
 
   @override
-  List<T> operator +(List<T> other) {
+  ReactiveList<T> operator +(List<T> other) {
     var result = _list + other;
 
     _controller?.markNeedsUpdate();
@@ -122,7 +122,14 @@ class ReactiveList<T> with ListMixin<T> {
     if (!_disableReactions)
       _controller?.initiateReactionsForVariable(_variableName, _list, result);
 
-    return result;
+    return ReactiveList.of(
+      result,
+      controller: _controller,
+      variableName: _variableName,
+      disableReactions: _disableReactions,
+      mutators: _mutators,
+      dataSafeMutations: _dataSafeMutations,
+    );
   }
 
   @override
@@ -496,11 +503,36 @@ class ReactiveList<T> with ListMixin<T> {
     _controller?.markNeedsUpdate();
   }
 
+  List<T> getMutatedList() {
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      var _tmpList = List<T>.from(_list);
+
+      for (var key in _tmpList.asMap().keys) {
+        for (var mutator in _mutators!) {
+          _tmpList[key] = mutator.mutate(_tmpList[key]);
+        }
+      }
+
+      return _tmpList;
+    } else {
+      return _list;
+    }
+  }
+
   @override
   List<T> toList({bool growable = true}) => _list.toList(growable: growable);
 
   @override
   Set<T> toSet() => _list.toSet();
+
+  ReactiveSet<T> toReactiveSet() => ReactiveSet.of(
+        _list.toSet(),
+        controller: _controller,
+        variableName: _variableName,
+        disableReactions: _disableReactions,
+        mutators: _mutators,
+        dataSafeMutations: _dataSafeMutations,
+      );
 
   @override
   int get length => _list.length;
@@ -510,6 +542,10 @@ class ReactiveList<T> with ListMixin<T> {
 
   @override
   set length(int value) {
+    if(value > _list.length && !_list.runtimeType.toString().contains("?")) {
+      throw Exception("You can't increase length of list by its setter, if its type is non-nullable (type is ${_list.runtimeType})");
+    }
+
     late List _oldList;
 
     if (!_disableReactions) _oldList = List.from(_list);
@@ -733,6 +769,7 @@ class ReactiveMap<K, V> with MapMixin<K, V> {
       for (var mutator in _mutators!) {
         value = mutator.mutate(value);
       }
+
     }
 
     if (oldValue != value) {
@@ -779,10 +816,12 @@ class ReactiveMap<K, V> with MapMixin<K, V> {
   }
 
   @override
-  Map<RK, RV> cast<RK, RV>() => ReactiveMap.of(super.cast()).wrap(
+  Map<RK, RV> cast<RK, RV>() => ReactiveMap.of(super.cast<RK, RV>()).wrap(
         controller: _controller!,
         variableName: _variableName,
         disableReactions: _disableReactions,
+        mutators: _mutators,
+        dataSafeMutations: _dataSafeMutations
       );
 
   @override

@@ -1,3 +1,6 @@
+![test coverage](https://img.shields.io/badge/coverage-95.5%25-green)
+![test results](https://img.shields.io/badge/tests-16%20passed%2C%200%20failed-green)
+
 # Nexus :rocket:
 
 **Nexus** is a state management library that makes it easy to create and consume your application's reactive data to the user interface. With **nexus_codegen**, wiring becoming fully automatic and feels very natural. As an application developer, you focus solely on what reactive data should be consumed in the UI (and elsewhere) without worrying about keeping it in sync.
@@ -19,8 +22,9 @@
 | Global state's stream (tracks all lifecycle of states) | :white_check_mark: |
 | Mutators | :white_check_mark: |
 | Guards | :white_check_mark: |
-| Unit-tests | |
-| Saving and restoring state from cache |  |
+| Unit-tests | :white_check_mark: |
+| Documentation | WIP |
+| Final refactoring |  |
 
 ## Quickstart
 

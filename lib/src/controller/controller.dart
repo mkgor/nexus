@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:nexus/src/state_event.dart';
+import 'package:nexus/src/events.dart';
 import 'package:nexus/src/stream_singleton.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -21,20 +22,32 @@ abstract class NexusController {
     init();
   }
 
-  Map<String, Map<String, NexusReaction>> _reactions = {};
+  final _logStreamController = StreamController<NexusStateEvent>();
 
-  bool _dirty = false;
+  final _reactions = Map<String, Map<String, NexusReaction>>();
 
-  bool get dirty => _dirty;
+  final _builderStateList = <State<NexusBuilder>>[];
 
-  List<State<NexusBuilder>> _builderStateList = [];
+  var _dirty = false;
 
-  BuildContext? get context =>
-      _builderStateList.isNotEmpty ? _builderStateList.last.context : null;
+  late final _logStream = _logStreamController.stream.asBroadcastStream();
 
   set builderStateList(State<NexusBuilder> builderState) {
     _builderStateList.add(builderState);
   }
+
+  get logStream => _logStream;
+
+  get dirty => _dirty;
+
+  get context =>
+      _builderStateList.isNotEmpty ? _builderStateList.last.context : null;
+
+  @visibleForTesting
+  List<State<NexusBuilder>> get builders => _builderStateList;
+
+  @visibleForTesting
+  StreamController get logStreamController => _logStreamController;
 
   /// Adding reaction for [variableName] with id [reactionId]
   ///
@@ -77,16 +90,16 @@ abstract class NexusController {
 
     if (_reactions[variableName]!.isEmpty) {
       _reactions.remove(variableName);
-
-      NexusStreamSingleton().emit(
-        EventType.reactionRemoved,
-        ReactionRemovedPayload(
-          stateId,
-          reactionId: reactionId,
-          variableName: variableName,
-        ),
-      );
     }
+
+    NexusStreamSingleton().emit(
+      EventType.reactionRemoved,
+      ReactionRemovedPayload(
+        stateId,
+        reactionId: reactionId,
+        variableName: variableName,
+      ),
+    );
   }
 
   /// Initiate reactions for variable with name [variableName]
@@ -104,17 +117,6 @@ abstract class NexusController {
     if (variableName == null) return;
 
     onUpdate(oldValue, newValue);
-
-    NexusStreamSingleton().emit(
-      EventType.stateUpdated,
-      StateUpdatedPayload(
-        stateId,
-        variableName: variableName,
-        context: context,
-        oldValue: oldValue,
-        newValue: newValue,
-      ),
-    );
 
     if (!_reactions.containsKey(variableName) || oldValue == newValue) {
       return;
@@ -168,6 +170,14 @@ abstract class NexusController {
     _unmountedBuildersList.clear();
 
     _dirty = false;
+
+    NexusStreamSingleton().emit(
+      EventType.stateUpdated,
+      StateUpdatedPayload(
+        stateId,
+        context: context,
+      ),
+    );
   }
 
   /// Performs synchronous action
@@ -219,6 +229,11 @@ abstract class NexusController {
   /// Calling when NexusController initializing
   @mustCallSuper
   void init() {
+    NexusStreamSingleton().stream.listen((event) {
+      if(event.payload.stateId == stateId && !_logStreamController.isClosed)
+        _logStreamController.add(event);
+    });
+
     NexusStreamSingleton().emit(
       EventType.stateInitialized,
       StateInitializedPayload(
@@ -245,5 +260,7 @@ abstract class NexusController {
       EventType.stateDisposed,
       StateDisposedPayload(stateId, context: context),
     );
+
+    _logStreamController.close();
   }
 }

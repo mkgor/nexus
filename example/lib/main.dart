@@ -1,7 +1,7 @@
 import 'package:example/processable_state.dart';
 import 'package:example/processable_widget_demo.dart';
 import 'package:flutter/material.dart';
-import 'demo_state.dart';
+import 'example_state.dart';
 
 import 'package:nexus/nexus.dart';
 
@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final state = DemoState();
+  final state = ExampleState();
   final processableState = ProcessableState();
 
   @override

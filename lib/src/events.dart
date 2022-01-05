@@ -43,16 +43,10 @@ class StateInitializedPayload extends EventPayload {
 
 class StateUpdatedPayload<T> extends EventPayload {
   final BuildContext? context;
-  final String variableName;
-  final T oldValue;
-  final T newValue;
 
   StateUpdatedPayload(
     String? stateId, {
     this.context,
-    required this.variableName,
-    required this.oldValue,
-    required this.newValue,
     DateTime? eventTime,
   }) : super(stateId: stateId, eventTime: eventTime);
 }
