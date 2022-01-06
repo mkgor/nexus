@@ -74,12 +74,12 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@mustCallSuper
 void init() {
-  NexusStreamSingleton().stream.listen((event) {
+  NexusGlobalEventBus().stream.listen((event) {
     if(event.payload.stateId == stateId &amp;&amp; !_logStreamController.isClosed)
       _logStreamController.add(event);
   });
 
-  NexusStreamSingleton().emit(
+  NexusGlobalEventBus().emit(
     EventType.stateInitialized,
     StateInitializedPayload(
       stateId,

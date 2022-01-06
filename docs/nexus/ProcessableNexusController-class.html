@@ -50,6 +50,15 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>Base class for any controller, which is responsible for loading and showing
+some content</p>
+<p>It contains <a href="../nexus/ContentStateController-class.html">ContentStateController</a>, which allows us to manage content state value</p>
+<p>For convenience, a special widget was implemented - <a href="../nexus/ProcessableWidget-class.html">ProcessableWidget</a>
+It is just <a href="https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html">StatelessWidget</a> which contains <a href="../nexus/NexusBuilder-class.html">NexusBuilder</a> and simplifies
+working with ProcessableNexusController and shows different widgets for
+every status of content's loading</p>
+</section>
 
 
     <section>
@@ -91,7 +100,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  Getter for builders, needs for testing 
   <div class="features">@<a href="https://pub.dev/documentation/meta/1.7.0/meta/visibleForTesting-constant.html">visibleForTesting</a>, read-only, inherited</div>
 
 </dd>
@@ -102,7 +111,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  @TODO add method addBuilder() 
   <div class="features">write-only, inherited</div>
 
 </dd>
@@ -113,7 +122,7 @@
 
 </dt>
 <dd>
-   
+  Current content loading status 
   <div class="features">read-only</div>
 
 </dd>
@@ -124,7 +133,7 @@
 
 </dt>
 <dd>
-   
+  Content state controller, use it to change content loading status 
   <div class="features">read-only</div>
 
 </dd>
@@ -135,7 +144,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  Getter for actual <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a>. Returns context of last registered <a href="../nexus/NexusBuilder-class.html">NexusBuilder</a> 
   <div class="features">read-only, inherited</div>
 
 </dd>
@@ -146,7 +155,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  Getter for 'dirty' 
   <div class="features">read-only, inherited</div>
 
 </dd>
@@ -168,7 +177,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  Getter for 'logStream' 
   <div class="features">read-only, inherited</div>
 
 </dd>
@@ -179,7 +188,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  Log stream controller getter, needs for testing 
   <div class="features">@<a href="https://pub.dev/documentation/meta/1.7.0/meta/visibleForTesting-constant.html">visibleForTesting</a>, read-only, inherited</div>
 
 </dd>
@@ -201,7 +210,7 @@
 
 </dt>
 <dd class="inherited">
-   
+  Unique identifier of controller 
   <div class="features">read / write, inherited</div>
 
 </dd>
@@ -420,8 +429,8 @@ Reactions are list of <a href="../nexus/NexusReaction.html">NexusReaction</a> <a
   <li><a href="../nexus/NexusAsyncAction-class.html">NexusAsyncAction</a></li>
   <li><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></li>
   <li><a href="../nexus/NexusController-class.html">NexusController</a></li>
+  <li><a href="../nexus/NexusGlobalEventBus-class.html">NexusGlobalEventBus</a></li>
   <li><a href="../nexus/NexusStateEvent-class.html">NexusStateEvent</a></li>
-  <li><a href="../nexus/NexusStreamSingleton-class.html">NexusStreamSingleton</a></li>
   <li><a href="../nexus/PerformedActionPayload-class.html">PerformedActionPayload</a></li>
   <li><a href="../nexus/PerformedAsyncActionPayload-class.html">PerformedAsyncActionPayload</a></li>
   <li><a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a></li>

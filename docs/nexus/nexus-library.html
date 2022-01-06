@@ -60,7 +60,10 @@
 
 </dt>
 <dd>
-   
+  Content state controller is needed for convenient control and display of state
+loading content. You don't need to create it manually, it's already built in
+<a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a>, you just need to refer to the <a href="../nexus/ProcessableNexusController/contentStateController.html">ProcessableNexusController.contentStateController</a> field
+and call the method corresponding to the current state of loading the content <a href="../nexus/ContentStateController-class.html">[...]</a>
 </dd>
 
         <dt id="EventPayload">
@@ -76,7 +79,9 @@
 
 </dt>
 <dd>
-   
+  Guards can be used in variables setters, it gets its' value in <a href="../nexus/Guard/handle.html">Guard.handle</a>
+and can make some computations or something else and do nothing if everything is ok,
+or throw exception if something went wrong 
 </dd>
 
         <dt id="Mutator">
@@ -84,7 +89,10 @@
 
 </dt>
 <dd>
-   
+  Mutators are used to modify some data while accessing it, for example
+you can have some variable with some user id. You can write mutator for
+that variable and it can go to some database, search full name of user
+with that id and return you full name of specified user. <a href="../nexus/Mutator-class.html">[...]</a>
 </dd>
 
         <dt id="NexusAsyncAction">
@@ -92,7 +100,8 @@
 
 </dt>
 <dd>
-   
+  Utility class for performing async actions, dont use it manually, use
+<a href="../nexus/NexusController/performAsyncAction.html">NexusController.performAsyncAction</a> instead 
 </dd>
 
         <dt id="NexusBuilder">
@@ -100,7 +109,8 @@
 
 </dt>
 <dd>
-   
+  Nexus builder is the most important widget in UI layer, it will rebuild
+on every reactive data modification 
 </dd>
 
         <dt id="NexusController">
@@ -108,19 +118,22 @@
 
 </dt>
 <dd>
-   
+  Base class for any Nexus state controller, each controller must
+inherit from it. <a href="../nexus/NexusController-class.html">NexusController</a> contains methods for updating
+UI, works with synchronous and asynchronous actions, reactions and controls
+all widgets that depend on it <a href="../nexus/NexusBuilder-class.html">NexusBuilder</a>. <a href="../nexus/NexusController-class.html">[...]</a>
+</dd>
+
+        <dt id="NexusGlobalEventBus">
+  <span class="name "><a href="../nexus/NexusGlobalEventBus-class.html">NexusGlobalEventBus</a></span> 
+
+</dt>
+<dd>
+  Nexus global event bus used to track all controller's life cycles, <a href="../nexus/NexusGlobalEventBus-class.html">[...]</a>
 </dd>
 
         <dt id="NexusStateEvent">
   <span class="name "><a href="../nexus/NexusStateEvent-class.html">NexusStateEvent</a></span> 
-
-</dt>
-<dd>
-   
-</dd>
-
-        <dt id="NexusStreamSingleton">
-  <span class="name "><a href="../nexus/NexusStreamSingleton-class.html">NexusStreamSingleton</a></span> 
 
 </dt>
 <dd>
@@ -148,7 +161,8 @@
 
 </dt>
 <dd>
-   
+  Base class for any controller, which is responsible for loading and showing
+some content <a href="../nexus/ProcessableNexusController-class.html">[...]</a>
 </dd>
 
         <dt id="ProcessableWidget">
@@ -156,7 +170,10 @@
 
 </dt>
 <dd>
-   
+  For convenience, a special widget was implemented - <a href="../nexus/ProcessableWidget-class.html">ProcessableWidget</a>
+It is just <a href="https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html">StatelessWidget</a> which contains <a href="../nexus/NexusBuilder-class.html">NexusBuilder</a> and simplifies
+working with ProcessableNexusController and shows different widgets for
+every status of content's loading <a href="../nexus/ProcessableWidget-class.html">[...]</a>
 </dd>
 
         <dt id="ReactionInitiatedPayload">
@@ -204,7 +221,7 @@
 
 </dt>
 <dd>
-   
+  Abstract class for custom reactive objects. <a href="../nexus/ReactiveObject-class.html">[...]</a>
 </dd>
 
         <dt id="ReactiveSet">
@@ -289,7 +306,7 @@
 
 </dt>
 <dd>
-   
+  Enum of possible states of content loading 
 </dd>
 
         <dt id="EventType">
@@ -297,7 +314,7 @@
 
 </dt>
 <dd>
-   
+  The following events reflect the life cycle of the controller 
 </dd>
 
       </dl>
@@ -316,7 +333,10 @@
 
   </dt>
   <dd>
-     
+    The <a href="../nexus/NexusReaction.html">NexusReaction</a> function is needed to handle reactions to changes in
+reactive variables. <a href="../nexus/NexusController-class.html">NexusController</a> will call this function and pass the
+old value of the reactive variable into it as the first argument, and pass
+the new value as the second argument 
     
 
   </dd>
@@ -359,8 +379,8 @@
   <li><a href="../nexus/NexusAsyncAction-class.html">NexusAsyncAction</a></li>
   <li><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></li>
   <li><a href="../nexus/NexusController-class.html">NexusController</a></li>
+  <li><a href="../nexus/NexusGlobalEventBus-class.html">NexusGlobalEventBus</a></li>
   <li><a href="../nexus/NexusStateEvent-class.html">NexusStateEvent</a></li>
-  <li><a href="../nexus/NexusStreamSingleton-class.html">NexusStreamSingleton</a></li>
   <li><a href="../nexus/PerformedActionPayload-class.html">PerformedActionPayload</a></li>
   <li><a href="../nexus/PerformedAsyncActionPayload-class.html">PerformedAsyncActionPayload</a></li>
   <li><a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a></li>

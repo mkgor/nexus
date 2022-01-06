@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
+import 'controller/controller.dart';
+import 'widgets/builder.dart';
 
+/// The following events reflect the life cycle of the controller
 enum EventType {
+  /// Controller has been initialized and ready to work
   stateInitialized,
+
+  ///[NexusController.update] method was called and all [NexusBuilder]
+  /// dependent on the given controller have been rebuilt
   stateUpdated,
+
+  /// Controller has been disposed, further work with it is impossible
   stateDisposed,
+
+  /// New reaction has been registered
   reactionRegistered,
+
+  /// Some changes in the reactive variable was recorded which has a registered
+  /// reaction. All reactions are started and in progress / completed
   reactionInitiated,
+
+  /// Reaction has been removed
   reactionRemoved,
+
+  /// Synchronous action performed
   performedAction,
+
+  /// Asynchronous action performed
   performedAsyncAction,
 }
 

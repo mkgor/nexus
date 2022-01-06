@@ -65,7 +65,7 @@ abstract class ExampleStateBase extends NexusController {
 
     print("Example state have id: $stateId");
 
-    NexusStreamSingleton().stream.listen((event) {
+    NexusGlobalEventBus().stream.listen((event) {
       print("Event type: ${event.type} ${event.payload.stateId}");
 
       switch (event.type) {

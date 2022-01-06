@@ -91,7 +91,7 @@ when constructing reactive state.</p>
 
   _dirty = false;
 
-  NexusStreamSingleton().emit(
+  NexusGlobalEventBus().emit(
     EventType.stateUpdated,
     StateUpdatedPayload(
       stateId,

@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'controller/controller.dart';
 
+/// Utility class for performing async actions, dont use it manually, use
+/// [NexusController.performAsyncAction] instead
+///
 class NexusAsyncAction {
   final NexusController _controllerInstance;
 

@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../controller/controller.dart';
 
+/// Nexus builder is the most important widget in UI layer, it will rebuild
+/// on every reactive data modification
 class NexusBuilder extends StatefulWidget {
   final NexusController controller;
   final WidgetBuilder builder;

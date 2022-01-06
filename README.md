@@ -23,8 +23,8 @@
 | Mutators | :white_check_mark: |
 | Guards | :white_check_mark: |
 | Unit-tests | :white_check_mark: |
-| Documentation | WIP |
-| Final refactoring |  |
+| Documentation | :white_check_mark: |
+| Final refactoring | WIP |
 
 ## Quickstart
 

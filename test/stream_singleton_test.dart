@@ -3,8 +3,8 @@ import 'package:nexus/nexus.dart';
 
 void main() {
   test("Stream close test", () {
-    NexusStreamSingleton().close();
+    NexusGlobalEventBus().close();
 
-    expect(NexusStreamSingleton().streamController.isClosed, true);
+    expect(NexusGlobalEventBus().streamController.isClosed, true);
   });
 }

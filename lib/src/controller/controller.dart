@@ -10,11 +10,61 @@ import 'dart:convert';
 import '../async_action.dart';
 import '../widgets/builder.dart';
 
+/// The [NexusReaction] function is needed to handle reactions to changes in
+/// reactive variables. [NexusController] will call this function and pass the
+/// old value of the reactive variable into it as the first argument, and pass
+/// the new value as the second argument
 typedef NexusReaction = void Function(dynamic, dynamic);
 
+/// Base class for any Nexus state controller, each controller must
+/// inherit from it. [NexusController] contains methods for updating
+/// UI, works with synchronous and asynchronous actions, reactions and controls
+/// all widgets that depend on it [NexusBuilder].
+///
+/// The controller also contains a stream for tracking its life cycle - [NexusController.logStream]
+///
+/// The following events reflect the life cycle of the controller
+///
+/// [EventType.stateInitialized] - the controller has been initialized and ready to work
+///
+/// [EventType.stateUpdated] - the [NexusController.update] method was called and all [NexusBuilder]
+/// dependent on the given controller have been rebuilt
+///
+/// [EventType.stateDisposed] - the controller has been disposed, further work with it is impossible
+///
+/// [EventType.reactionRegistered] - a new reaction has been registered
+///
+/// [EventType.reactionInitiated] - a change in the reactive variable was recorded
+/// which has a registered reaction. All reactions are started and in progress / completed
+///
+/// [EventType.reactionRemoved] - the reaction has been removed
+///
+/// [EventType.performedAction] - synchronous action performed
+///
+/// [EventType.performedAsyncAction] - asynchronous action performed
+///
+/// Each event contains [NexusController.stateId] - a unique identifier
+/// controller.
+///
+/// Also, for convenience, the controller has some lifecycle hooks such as
+/// [NexusController.init] - executed when the controller is initialized, when overriding it is mandatory
+/// need to call super.init ()
+///
+/// [NexusController.onUpdate] - executed when initiating a reaction, takes two arguments:
+/// old variable value and new value
+///
+/// [NexusController.dispose] - executed when the controller is disposing, when overriding it is mandatory
+/// need to call super.dispose ()
+///
 abstract class NexusController {
+  /// Unique identifier of controller
   late String? stateId;
 
+  /// Default constructor for [NexusController]
+  ///
+  /// Sets the random stateId if it is not passed by constructor's argument
+  ///
+  /// Calls the [NexusController.init] hook after setting stateId
   NexusController({this.stateId}) {
     stateId ??=
         md5.convert(utf8.encode(Random().nextInt(10000).toString())).toString();
@@ -22,30 +72,48 @@ abstract class NexusController {
     init();
   }
 
+  /// Stream controller for logStream (stream for tracking life cycle of [NexusController]]
   final _logStreamController = StreamController<NexusStateEvent>();
 
+  /// Map, which contains all registered reactions
+  ///
+  /// Key of map is a name of variable
+  /// Value is a map which contains reactionId as key and reaction function as value
   final _reactions = Map<String, Map<String, NexusReaction>>();
 
+  /// List of all [NexusBuilder]s which are depends on current controller
+  ///
+  /// [NexusController] will update all builders from that list if [NexusController.update]
+  /// was called
   final _builderStateList = <State<NexusBuilder>>[];
 
+  /// Flag for controller, which means, that some reactive data was update, but
+  /// UI wasn't rebuilt
   var _dirty = false;
 
+  /// Log stream
   late final _logStream = _logStreamController.stream.asBroadcastStream();
 
+  /// @TODO add method addBuilder()
   set builderStateList(State<NexusBuilder> builderState) {
     _builderStateList.add(builderState);
   }
 
+  /// Getter for 'logStream'
   get logStream => _logStream;
 
+  /// Getter for 'dirty'
   get dirty => _dirty;
 
+  /// Getter for actual [BuildContext]. Returns context of last registered [NexusBuilder]
   get context =>
       _builderStateList.isNotEmpty ? _builderStateList.last.context : null;
 
+  /// Getter for builders, needs for testing
   @visibleForTesting
   List<State<NexusBuilder>> get builders => _builderStateList;
 
+  /// Log stream controller getter, needs for testing
   @visibleForTesting
   StreamController get logStreamController => _logStreamController;
 
@@ -62,7 +130,7 @@ abstract class NexusController {
       _reactions[variableName] = {reactionId: reaction};
     }
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.reactionRegistered,
       ReactionRegisteredPayload(
         stateId,
@@ -92,7 +160,7 @@ abstract class NexusController {
       _reactions.remove(variableName);
     }
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.reactionRemoved,
       ReactionRemovedPayload(
         stateId,
@@ -124,7 +192,7 @@ abstract class NexusController {
 
     _reactions[variableName]?.forEach((key, value) {
       try {
-        NexusStreamSingleton().emit(
+        NexusGlobalEventBus().emit(
           EventType.reactionInitiated,
           ReactionInitiatedPayload(
             stateId,
@@ -171,7 +239,7 @@ abstract class NexusController {
 
     _dirty = false;
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.stateUpdated,
       StateUpdatedPayload(
         stateId,
@@ -188,7 +256,7 @@ abstract class NexusController {
 
     if (dirty) update();
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.performedAction,
       PerformedActionPayload(
         stateId,
@@ -207,7 +275,7 @@ abstract class NexusController {
 
     final _actionResult = await _nexusAsyncAction.run(fn);
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.performedAsyncAction,
       PerformedAsyncActionPayload(
         stateId,
@@ -229,12 +297,12 @@ abstract class NexusController {
   /// Calling when NexusController initializing
   @mustCallSuper
   void init() {
-    NexusStreamSingleton().stream.listen((event) {
+    NexusGlobalEventBus().stream.listen((event) {
       if(event.payload.stateId == stateId && !_logStreamController.isClosed)
         _logStreamController.add(event);
     });
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.stateInitialized,
       StateInitializedPayload(
         stateId,
@@ -256,7 +324,7 @@ abstract class NexusController {
   void dispose() {
     _builderStateList.clear();
 
-    NexusStreamSingleton().emit(
+    NexusGlobalEventBus().emit(
       EventType.stateDisposed,
       StateDisposedPayload(stateId, context: context),
     );
