@@ -1,16 +1,20 @@
 import 'dart:async';
+import 'controller/controller.dart';
 
 import 'package:nexus/src/events.dart';
 
-class NexusStreamSingleton {
-  static final NexusStreamSingleton _singleton =
-      NexusStreamSingleton._internal();
+/// Nexus global event bus used to track all controller's life cycles,
+///
+/// If you want to track specified controller, use [NexusController.logStream]
+class NexusGlobalEventBus {
+  static final NexusGlobalEventBus _singleton =
+      NexusGlobalEventBus._internal();
 
-  factory NexusStreamSingleton() {
+  factory NexusGlobalEventBus() {
     return _singleton;
   }
 
-  NexusStreamSingleton._internal();
+  NexusGlobalEventBus._internal();
 
   final StreamController<NexusStateEvent> streamController =
       StreamController<NexusStateEvent>();

@@ -3,6 +3,16 @@ import 'package:nexus/nexus.dart';
 import 'package:nexus/src/controller/content_state_controller.dart';
 import 'package:nexus/src/controller/processable_controller.dart';
 
+/// For convenience, a special widget was implemented - [ProcessableWidget]
+/// It is just [StatelessWidget] which contains [NexusBuilder] and simplifies
+/// working with ProcessableNexusController and shows different widgets for
+/// every status of content's loading
+///
+/// You should implement your own ProcessableWidget to work with ProcessableNexusController
+///
+/// It contains methods for each content loading status
+///
+/// Check example to get a representation of how to work with this widget
 abstract class ProcessableWidget<T extends ProcessableNexusController>
     extends StatelessWidget {
   final T controller;
@@ -35,14 +45,19 @@ abstract class ProcessableWidget<T extends ProcessableNexusController>
     );
   }
 
+  /// Will be shown if content state is [ContentState.initial]
   Widget initial(BuildContext context);
 
+  /// Will be shown if content state is [ContentState.loading]
   Widget loading(BuildContext context);
 
+  /// Will be shown if content state is [ContentState.loaded]
   Widget loaded(BuildContext context);
 
+  /// Will be shown if content state is [ContentState.error]
   Widget error(BuildContext context);
 
+  /// Will be shown if content state is [ContentState.empty]
   Widget empty(BuildContext context);
 
   void init() => {};
