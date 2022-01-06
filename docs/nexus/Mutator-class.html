@@ -50,6 +50,16 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>Mutators are used to modify some data while accessing it, for example
+you can have some variable with some user id. You can write mutator for
+that variable and it can go to some database, search full name of user
+with that id and return you full name of specified user.</p>
+<p>Mutators can be dataSafe and dataUnsafe when working with reactive collections
+dataSafe mutations are mutating values on getter and don't modifies initial data</p>
+<p>dataUnsafe mutations are mutating values on setter and you can lose initial data,
+but dataUnsafe mutations allows us to use sorting methods on mutated lists,</p>
+</section>
 
 
 
@@ -189,8 +199,8 @@
   <li><a href="../nexus/NexusAsyncAction-class.html">NexusAsyncAction</a></li>
   <li><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></li>
   <li><a href="../nexus/NexusController-class.html">NexusController</a></li>
+  <li><a href="../nexus/NexusGlobalEventBus-class.html">NexusGlobalEventBus</a></li>
   <li><a href="../nexus/NexusStateEvent-class.html">NexusStateEvent</a></li>
-  <li><a href="../nexus/NexusStreamSingleton-class.html">NexusStreamSingleton</a></li>
   <li><a href="../nexus/PerformedActionPayload-class.html">PerformedActionPayload</a></li>
   <li><a href="../nexus/PerformedAsyncActionPayload-class.html">PerformedAsyncActionPayload</a></li>
   <li><a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a></li>

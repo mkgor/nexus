@@ -87,7 +87,7 @@
     _reactions.remove(variableName);
   }
 
-  NexusStreamSingleton().emit(
+  NexusGlobalEventBus().emit(
     EventType.reactionRemoved,
     ReactionRemovedPayload(
       stateId,

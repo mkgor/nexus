@@ -50,6 +50,24 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>Content state controller is needed for convenient control and display of state
+loading content. You don't need to create it manually, it's already built in
+<a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a>, you just need to refer to the <a href="../nexus/ProcessableNexusController/contentStateController.html">ProcessableNexusController.contentStateController</a> field
+and call the method corresponding to the current state of loading the content</p>
+<pre class="language-dart"><code>void loadContent() async {
+  contentStateController.loading();
+
+  var result = await dataSource.getContent();
+
+  if(result != null) {
+    contentStateController.loaded();
+  } else {
+    contentStateController.error();
+  }
+}
+</code></pre>
+</section>
 
 
 
@@ -61,7 +79,9 @@
           <span class="name"><a href="../nexus/ContentStateController/ContentStateController.html">ContentStateController</a></span><span class="signature">(<span class="parameter" id="-param-controller"><span class="type-annotation"><a href="../nexus/NexusController-class.html">NexusController</a></span> <span class="parameter-name">controller</span></span>)</span>
         </dt>
         <dd>
-           
+          If you are trying to create <a href="../nexus/ContentStateController-class.html">ContentStateController</a> instance manually,
+don't forget to pass <a href="../nexus/NexusController-class.html">NexusController</a> which is need to be updated by changing
+<a href="../nexus/ContentState.html">ContentState</a> 
         </dd>
       </dl>
     </section>
@@ -98,7 +118,7 @@
 
 </dt>
 <dd>
-   
+  Getter for content state's value 
   <div class="features">read-only</div>
 
 </dd>
@@ -117,7 +137,7 @@
 
 </dt>
 <dd>
-   
+  Changes content state value to "empty" and updates UI 
   
 
 </dd>
@@ -130,7 +150,7 @@
 
 </dt>
 <dd>
-   
+  Changes content state value to "error" and updates UI 
   
 
 </dd>
@@ -143,7 +163,7 @@
 
 </dt>
 <dd>
-   
+  Changes content state value to "initial" and updates UI 
   
 
 </dd>
@@ -156,7 +176,7 @@
 
 </dt>
 <dd>
-   
+  Changes content state value to "loaded" and updates UI 
   
 
 </dd>
@@ -169,7 +189,7 @@
 
 </dt>
 <dd>
-   
+  Changes content state value to "loading" and updates UI 
   
 
 </dd>
@@ -251,8 +271,8 @@
   <li><a href="../nexus/NexusAsyncAction-class.html">NexusAsyncAction</a></li>
   <li><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></li>
   <li><a href="../nexus/NexusController-class.html">NexusController</a></li>
+  <li><a href="../nexus/NexusGlobalEventBus-class.html">NexusGlobalEventBus</a></li>
   <li><a href="../nexus/NexusStateEvent-class.html">NexusStateEvent</a></li>
-  <li><a href="../nexus/NexusStreamSingleton-class.html">NexusStreamSingleton</a></li>
   <li><a href="../nexus/PerformedActionPayload-class.html">PerformedActionPayload</a></li>
   <li><a href="../nexus/PerformedAsyncActionPayload-class.html">PerformedAsyncActionPayload</a></li>
   <li><a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a></li>

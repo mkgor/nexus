@@ -50,6 +50,15 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>For convenience, a special widget was implemented - <a href="../nexus/ProcessableWidget-class.html">ProcessableWidget</a>
+It is just <a href="https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html">StatelessWidget</a> which contains <a href="../nexus/NexusBuilder-class.html">NexusBuilder</a> and simplifies
+working with ProcessableNexusController and shows different widgets for
+every status of content's loading</p>
+<p>You should implement your own ProcessableWidget to work with ProcessableNexusController</p>
+<p>It contains methods for each content loading status</p>
+<p>Check example to get a representation of how to work with this widget</p>
+</section>
 
 
     <section>
@@ -198,7 +207,7 @@ children. <a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree
 
 </dt>
 <dd>
-   
+  Will be shown if content state is <a href="../nexus/ContentState.html">ContentState.empty</a> 
   
 
 </dd>
@@ -211,7 +220,7 @@ children. <a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree
 
 </dt>
 <dd>
-   
+  Will be shown if content state is <a href="../nexus/ContentState.html">ContentState.error</a> 
   
 
 </dd>
@@ -237,7 +246,7 @@ children. <a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree
 
 </dt>
 <dd>
-   
+  Will be shown if content state is <a href="../nexus/ContentState.html">ContentState.initial</a> 
   
 
 </dd>
@@ -250,7 +259,7 @@ children. <a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree
 
 </dt>
 <dd>
-   
+  Will be shown if content state is <a href="../nexus/ContentState.html">ContentState.loaded</a> 
   
 
 </dd>
@@ -263,7 +272,7 @@ children. <a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree
 
 </dt>
 <dd>
-   
+  Will be shown if content state is <a href="../nexus/ContentState.html">ContentState.loading</a> 
   
 
 </dd>
@@ -398,8 +407,8 @@ tools and by <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode
   <li><a href="../nexus/NexusAsyncAction-class.html">NexusAsyncAction</a></li>
   <li><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></li>
   <li><a href="../nexus/NexusController-class.html">NexusController</a></li>
+  <li><a href="../nexus/NexusGlobalEventBus-class.html">NexusGlobalEventBus</a></li>
   <li><a href="../nexus/NexusStateEvent-class.html">NexusStateEvent</a></li>
-  <li><a href="../nexus/NexusStreamSingleton-class.html">NexusStreamSingleton</a></li>
   <li><a href="../nexus/PerformedActionPayload-class.html">PerformedActionPayload</a></li>
   <li><a href="../nexus/PerformedAsyncActionPayload-class.html">PerformedAsyncActionPayload</a></li>
   <li><a href="../nexus/ProcessableNexusController-class.html">ProcessableNexusController</a></li>

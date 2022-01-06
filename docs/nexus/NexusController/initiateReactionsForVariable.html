@@ -89,7 +89,7 @@ Reactions are list of <a href="../../nexus/NexusReaction.html">NexusReaction</a>
 
   _reactions[variableName]?.forEach((key, value) {
     try {
-      NexusStreamSingleton().emit(
+      NexusGlobalEventBus().emit(
         EventType.reactionInitiated,
         ReactionInitiatedPayload(
           stateId,

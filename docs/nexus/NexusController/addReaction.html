@@ -81,7 +81,7 @@
     _reactions[variableName] = {reactionId: reaction};
   }
 
-  NexusStreamSingleton().emit(
+  NexusGlobalEventBus().emit(
     EventType.reactionRegistered,
     ReactionRegisteredPayload(
       stateId,

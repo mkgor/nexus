@@ -75,7 +75,7 @@
 
   final _actionResult = await _nexusAsyncAction.run(fn);
 
-  NexusStreamSingleton().emit(
+  NexusGlobalEventBus().emit(
     EventType.performedAsyncAction,
     PerformedAsyncActionPayload(
       stateId,

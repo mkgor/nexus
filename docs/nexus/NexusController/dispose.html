@@ -77,7 +77,7 @@
 void dispose() {
   _builderStateList.clear();
 
-  NexusStreamSingleton().emit(
+  NexusGlobalEventBus().emit(
     EventType.stateDisposed,
     StateDisposedPayload(stateId, context: context),
   );
