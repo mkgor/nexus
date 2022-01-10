@@ -57,6 +57,7 @@ abstract class ExampleStateBase extends NexusController {
   @action
   void increment(int value) {
     intList.add(value);
+    reactiveUser.weight += value;
   }
 
   @override
@@ -107,8 +108,4 @@ abstract class ExampleStateBase extends NexusController {
   }
 
   ExampleStateBase({String? stateId}) : super(stateId: stateId);
-}
-
-class UserB {
-
 }

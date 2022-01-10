@@ -118,6 +118,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            NexusBuilder(
+              controller: state,
+              builder: (BuildContext context) {
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Reactive user: ${state.reactiveUser.name} - ${state.reactiveUser.weight}")
+                    ]
+                );
+              },
+            ),
             ProcessableWidgetDemo(controller: processableState)
           ],
         ),
