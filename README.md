@@ -13,7 +13,6 @@
 | Reactions | ✅  | 
 | Synchronous actions | ✅  |
 | Asynchronous actions |  ✅ |
-| Reactions |  ✅ |
 | Lifecycle hooks |  ✅ |
 | Reactive collections (list, set, map) |  ✅ |
 | Custom reactive objects |  ✅ |
