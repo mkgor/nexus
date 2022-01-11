@@ -37,7 +37,7 @@ void main() {
     var state = DemoState();
     var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
 
-    state.builderStateList = builder.createState();
+    state.registerBuilder(builder.createState());
 
     state.logStream.listen((event) {
       var expectedEvent = eventsStack[iterator];
