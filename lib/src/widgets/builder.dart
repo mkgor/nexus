@@ -19,7 +19,7 @@ class _NexusBuilderState extends State<NexusBuilder> {
   void initState() {
     super.initState();
 
-    widget.controller.builderStateList = this;
+    widget.controller.registerBuilder(this);
   }
 
   @override
