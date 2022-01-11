@@ -79,16 +79,11 @@ so a returned <code>null</code> value doesn't always mean that the key was absen
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 V? remove(Object? key) {
-  late Map _oldMap;
-
-  if (!_disableReactions) _oldMap = Map.from(_map);
+  Map&lt;K, V&gt; _oldMap = _disableReactions ? _map : Map&lt;K, V&gt;.from(_map);
 
   V? result = _map.remove(key);
 
-  if (!_disableReactions)
-    _controller?.initiateReactionsForVariable(_variableName, _oldMap, _map);
-
-  _controller?.markNeedsUpdate();
+  _finalizeCollectionAction(_oldMap);
 
   return result;
 }</code></pre>

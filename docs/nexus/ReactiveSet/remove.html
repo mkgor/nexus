@@ -79,16 +79,11 @@ The method has no effect if <code>value</code> was not in the set.</p>
 bool remove(Object? value) {
   var _result = false;
 
-  late Set _oldSet;
-
-  if (!_disableReactions) _oldSet = Set.from(_set);
+  Set&lt;T&gt; _oldSet = _disableReactions ? _set : Set&lt;T&gt;.from(_set);
 
   _result = _set.remove(value);
 
-  if (!_disableReactions)
-    _controller?.initiateReactionsForVariable(_variableName, _oldSet, _set);
-
-  _controller?.markNeedsUpdate();
+  _finalizeCollectionAction(_oldSet);
 
   return _result;
 }</code></pre>

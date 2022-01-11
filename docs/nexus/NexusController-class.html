@@ -121,17 +121,6 @@ need to call super.dispose ()</p>
 
 </dd>
 
-        <dt id="builderStateList" class="property">
-  <span class="name"><a href="../nexus/NexusController/builderStateList.html">builderStateList</a></span>
-  <span class="signature">&#8592; <a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></span>&gt;</span></span> 
-
-</dt>
-<dd>
-  @TODO add method addBuilder() 
-  <div class="features">write-only</div>
-
-</dd>
-
         <dt id="context" class="property">
   <span class="name"><a href="../nexus/NexusController/context.html">context</a></span>
   <span class="signature">&#8594; dynamic</span> 
@@ -333,6 +322,20 @@ Reactions are list of <a href="../nexus/NexusReaction.html">NexusReaction</a> <a
 
 </dd>
 
+        <dt id="registerBuilder" class="callable">
+  <span class="name"><a href="../nexus/NexusController/registerBuilder.html">registerBuilder</a></span><span class="signature">(<wbr><span class="parameter" id="registerBuilder-param-builderState"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../nexus/NexusBuilder-class.html">NexusBuilder</a></span>&gt;</span></span> <span class="parameter-name">builderState</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Adds builder to controller's builder list. Any builder which added to controller
+will be rebuild if <a href="../nexus/NexusController/update.html">NexusController.update</a> method invoked 
+  
+
+</dd>
+
         <dt id="removeReaction" class="callable">
   <span class="name"><a href="../nexus/NexusController/removeReaction.html">removeReaction</a></span><span class="signature">(<wbr><span class="parameter" id="removeReaction-param-variableName">{<span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">variableName</span>, </span><span class="parameter" id="removeReaction-param-reactionId"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">reactionId</span>}</span>)
     <span class="returntype parameter">&#8594; void</span>
@@ -471,7 +474,6 @@ Reactions are list of <a href="../nexus/NexusReaction.html">NexusReaction</a> <a
       <a href="../nexus/NexusController-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../nexus/NexusController/builders.html">builders</a></li>
-    <li><a href="../nexus/NexusController/builderStateList.html">builderStateList</a></li>
     <li><a href="../nexus/NexusController/context.html">context</a></li>
     <li><a href="../nexus/NexusController/dirty.html">dirty</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
@@ -490,6 +492,7 @@ Reactions are list of <a href="../nexus/NexusReaction.html">NexusReaction</a> <a
     <li><a href="../nexus/NexusController/onUpdate.html">onUpdate</a></li>
     <li><a href="../nexus/NexusController/performAction.html">performAction</a></li>
     <li><a href="../nexus/NexusController/performAsyncAction.html">performAsyncAction</a></li>
+    <li><a href="../nexus/NexusController/registerBuilder.html">registerBuilder</a></li>
     <li><a href="../nexus/NexusController/removeReaction.html">removeReaction</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
     <li><a href="../nexus/NexusController/update.html">update</a></li>

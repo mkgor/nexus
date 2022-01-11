@@ -80,20 +80,13 @@ Otherwise the key/value pair is added to the map.</p>
 void operator []=(K key, V value) {
   final oldValue = _map[key];
 
-  if (_mutators != null &amp;&amp; _mutators!.isNotEmpty &amp;&amp; !_dataSafeMutations) {
-    for (var mutator in _mutators!) {
-      value = mutator.mutate(value);
-    }
+  Map&lt;K, V&gt; _oldMap = _disableReactions ? _map : Map&lt;K, V&gt;.from(_map);
 
-  }
+  value = _performMutations(value);
 
   if (oldValue != value) {
     _map[key] = value;
-    _controller?.markNeedsUpdate();
-
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(
-          _variableName, oldValue, value);
+    _finalizeCollectionAction(_oldMap);
   }
 }</code></pre>
 </section>

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the builderStateList property from the NexusController class, for the Dart programming language.">
-  <title>builderStateList property - NexusController class - nexus library - Dart API</title>
+  <meta name="description" content="API docs for the registerBuilder method from the NexusController class, for the Dart programming language.">
+  <title>registerBuilder method - NexusController class - nexus library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">nexus</a></li>
     <li><a href="../../nexus/nexus-library.html">nexus</a></li>
     <li><a href="../../nexus/NexusController-class.html">NexusController</a></li>
-    <li class="self-crumb">builderStateList property</li>
+    <li class="self-crumb">registerBuilder method</li>
   </ol>
-  <div class="self-name">builderStateList</div>
+  <div class="self-name">registerBuilder</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,36 +45,35 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-property">builderStateList</span> property 
+<h1><span class="kind-method">registerBuilder</span> method 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
+    <section class="multi-line-signature">
+      
 
+<span class="returntype">void</span>
+<span class="name ">registerBuilder</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="registerBuilder-param-builderState"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../nexus/NexusBuilder-class.html">NexusBuilder</a></span>&gt;</span></span> <span class="parameter-name">builderState</span></span></li>
+</ol>)
 
-        
-<section id="setter">
+      
 
-<section class="multi-line-signature">
-  <span class="returntype">void</span>
-  <span class="name ">builderStateList=</span><span class="signature">(<wbr><span class="parameter" id="builderStateList=-param-builderState"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../nexus/NexusBuilder-class.html">NexusBuilder</a></span>&gt;</span></span> <span class="parameter-name">builderState</span></span>)</span>
-  
-
-</section>
-
-
+    </section>
+    
 <section class="desc markdown">
-  <p>@TODO add method addBuilder()</p>
+  <p>Adds builder to controller's builder list. Any builder which added to controller
+will be rebuild if <a href="../../nexus/NexusController/update.html">NexusController.update</a> method invoked</p>
 </section>
 
 
+    
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">set builderStateList(State&lt;NexusBuilder&gt; builderState) {
+  <pre class="language-dart"><code class="language-dart">void registerBuilder(State&lt;NexusBuilder&gt; builderState) {
   _builderStateList.add(builderState);
 }</code></pre>
 </section>
 
-</section>
 
   </div> <!-- /.main-content -->
 
@@ -89,7 +88,7 @@
   <li><a href="../../index.html">nexus</a></li>
   <li><a href="../../nexus/nexus-library.html">nexus</a></li>
   <li><a href="../../nexus/NexusController-class.html">NexusController</a></li>
-  <li class="self-crumb">builderStateList property</li>
+  <li class="self-crumb">registerBuilder method</li>
 </ol>
 
 
@@ -104,7 +103,6 @@
       <a href="../../nexus/NexusController-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../../nexus/NexusController/builders.html">builders</a></li>
-    <li><a href="../../nexus/NexusController/builderStateList.html">builderStateList</a></li>
     <li><a href="../../nexus/NexusController/context.html">context</a></li>
     <li><a href="../../nexus/NexusController/dirty.html">dirty</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
@@ -123,6 +121,7 @@
     <li><a href="../../nexus/NexusController/onUpdate.html">onUpdate</a></li>
     <li><a href="../../nexus/NexusController/performAction.html">performAction</a></li>
     <li><a href="../../nexus/NexusController/performAsyncAction.html">performAsyncAction</a></li>
+    <li><a href="../../nexus/NexusController/registerBuilder.html">registerBuilder</a></li>
     <li><a href="../../nexus/NexusController/removeReaction.html">removeReaction</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
     <li><a href="../../nexus/NexusController/update.html">update</a></li>

@@ -93,22 +93,13 @@ assert(identical(time1, set.first));
 bool add(T value) {
   var _result = false;
 
-  late Set _oldSet;
+  Set&lt;T&gt; _oldSet = _disableReactions ? _set : Set&lt;T&gt;.from(_set);
 
-  if (!_disableReactions) _oldSet = Set.from(_set);
-
-  if (_mutators != null &amp;&amp; _mutators!.isNotEmpty &amp;&amp; !_dataSafeMutations) {
-    for (var mutator in _mutators!) {
-      value = mutator.mutate(value);
-    }
-  }
+  value = _performMutations(value);
 
   _result = _set.add(value);
 
-  if (!_disableReactions)
-    _controller?.initiateReactionsForVariable(_variableName, _oldSet, _set);
-
-  _controller?.markNeedsUpdate();
+  _finalizeCollectionAction(_oldSet);
 
   return _result;
 }</code></pre>

@@ -74,16 +74,11 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 void clear() {
-  late Set _oldSet;
-
-  if (!_disableReactions) _oldSet = Set.from(_set);
+  Set&lt;T&gt; _oldSet = _disableReactions ? _set : Set&lt;T&gt;.from(_set);
 
   _set.clear();
 
-  if (!_disableReactions)
-    _controller?.initiateReactionsForVariable(_variableName, _oldSet, _set);
-
-  _controller?.markNeedsUpdate();
+  _finalizeCollectionAction(_oldSet);
 }</code></pre>
 </section>
 

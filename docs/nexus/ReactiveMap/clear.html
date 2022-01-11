@@ -75,16 +75,11 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 void clear() {
-  late Map _oldMap;
-
-  if (!_disableReactions) _oldMap = Map.from(_map);
+  Map&lt;K, V&gt; _oldMap = _disableReactions ? _map : Map&lt;K, V&gt;.from(_map);
 
   _map.clear();
 
-  if (!_disableReactions)
-    _controller?.initiateReactionsForVariable(_variableName, _oldMap, _map);
-
-  _controller?.markNeedsUpdate();
+  _finalizeCollectionAction(_oldMap);
 }</code></pre>
 </section>
 

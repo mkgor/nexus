@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the getMutatedList method from the ReactiveList class, for the Dart programming language.">
-  <title>getMutatedList method - ReactiveList class - nexus library - Dart API</title>
+  <meta name="description" content="API docs for the unmutatedList property from the ReactiveList class, for the Dart programming language.">
+  <title>unmutatedList property - ReactiveList class - nexus library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">nexus</a></li>
     <li><a href="../../nexus/nexus-library.html">nexus</a></li>
     <li><a href="../../nexus/ReactiveList-class.html">ReactiveList<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
-    <li class="self-crumb">getMutatedList method</li>
+    <li class="self-crumb">unmutatedList property</li>
   </ol>
-  <div class="self-name">getMutatedList</div>
+  <div class="self-name">unmutatedList</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,40 +45,35 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">getMutatedList</span> method 
+<h1><span class="kind-property">unmutatedList</span> property 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
-    <section class="multi-line-signature">
-      
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
-<span class="name ">getMutatedList</span>(<wbr>)
+        
+<section id="getter">
 
-      
+<section class="multi-line-signature">
+  <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  <span class="name ">unmutatedList</span>
+  
 
-    </section>
-    
+</section>
 
 
-    
+
+
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">List&lt;T&gt; getMutatedList() {
-  if (_mutators != null &amp;&amp; _mutators!.isNotEmpty &amp;&amp; !_dataSafeMutations) {
-    var _tmpList = List&lt;T&gt;.from(_list);
+  <pre class="language-dart"><code class="language-dart">List&lt;T&gt; get unmutatedList {
+  if (!_dataSafeMutations)
+    print(
+        &quot;[WARNING] You are trying to get unmutated list, when dataSafeMutations disabled!&quot;);
 
-    for (var key in _tmpList.asMap().keys) {
-      for (var mutator in _mutators!) {
-        _tmpList[key] = mutator.mutate(_tmpList[key]);
-      }
-    }
-
-    return _tmpList;
-  } else {
-    return _list;
-  }
+  return _list;
 }</code></pre>
+</section>
+
 </section>
 
 
@@ -95,7 +90,7 @@
   <li><a href="../../index.html">nexus</a></li>
   <li><a href="../../nexus/nexus-library.html">nexus</a></li>
   <li><a href="../../nexus/ReactiveList-class.html">ReactiveList<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
-  <li class="self-crumb">getMutatedList method</li>
+  <li class="self-crumb">unmutatedList property</li>
 </ol>
 
 
@@ -117,9 +112,11 @@
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/iterator.html">iterator</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/last.html">last</a></li>
     <li><a href="../../nexus/ReactiveList/length.html">length</a></li>
+    <li><a href="../../nexus/ReactiveList/mutatedList.html">mutatedList</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/reversed.html">reversed</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/single.html">single</a></li>
+    <li><a href="../../nexus/ReactiveList/unmutatedList.html">unmutatedList</a></li>
 
     <li class="section-title"><a href="../../nexus/ReactiveList-class.html#instance-methods">Methods</a></li>
     <li><a href="../../nexus/ReactiveList/add.html">add</a></li>
@@ -137,7 +134,6 @@
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/fold.html">fold</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/followedBy.html">followedBy</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/forEach.html">forEach</a></li>
-    <li><a href="../../nexus/ReactiveList/getMutatedList.html">getMutatedList</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/getRange.html">getRange</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/indexOf.html">indexOf</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-collection/ListMixin/indexWhere.html">indexWhere</a></li>
