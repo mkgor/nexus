@@ -153,19 +153,14 @@ class ReactiveList<T> with ListMixin<T> {
   void operator []=(int index, T value) {
     final oldValue = _list[index];
 
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var mutator in _mutators!) {
-        value = mutator.mutate(value);
-      }
-    }
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
+
+    value = _performMutations(value);
 
     if (oldValue != value) {
       _list[index] = value;
-      _controller?.markNeedsUpdate();
 
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, oldValue, value);
+      _finalizeCollectionAction(_oldList);
     }
   }
 
@@ -176,131 +171,81 @@ class ReactiveList<T> with ListMixin<T> {
 
   @override
   void add(T value) {
-    late List _oldList;
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-    if (!_disableReactions) _oldList = List.from(_list);
-
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var mutator in _mutators!) {
-        value = mutator.mutate(value);
-      }
-    }
+    value = _performMutations(value);
 
     _list.add(value);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void addAll(Iterable<T> iterable) {
-    var _listIterable = iterable.toList();
 
     if (iterable.isNotEmpty) {
-      late List _oldList;
+      List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-      if (!_disableReactions) _oldList = List.from(_list);
-
-      if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-        for (var key in iterable.toList().asMap().keys) {
-          for (var mutator in _mutators!) {
-            _listIterable[key] = mutator.mutate(_listIterable[key]);
-          }
-        }
-      }
+      var _listIterable = _performMutationsOnIterable(iterable);
 
       _list.addAll(_listIterable);
 
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, _oldList, _list);
-      _controller?.markNeedsUpdate();
+      _finalizeCollectionAction(_oldList);
     }
   }
 
   @override
   void clear() {
     if (_list.isNotEmpty) {
-      late List _oldList;
-
-      if (!_disableReactions) _oldList = List.from(_list);
+      List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
       _list.clear();
 
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, _oldList, _list);
-
-      _controller?.markNeedsUpdate();
+      _finalizeCollectionAction(_oldList);
     }
   }
 
   @override
   void fillRange(int start, int end, [T? fillValue]) {
+    if (!_list.runtimeType.toString().contains("?") && fillValue == null) {
+      throw Exception(
+          "You can't fill list with null value, if its type is non-nullable (type is ${_list.runtimeType})");
+    }
+
     if (end > start) {
-      late List _oldList;
+      List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-      if (!_disableReactions) _oldList = List.from(_list);
-
-      if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-        for (var mutator in _mutators!) {
-          fillValue = mutator.mutate(fillValue);
-        }
+      if(fillValue != null) {
+        fillValue = _performMutations(fillValue);
       }
 
       _list.fillRange(start, end, fillValue);
 
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, _oldList, _list);
-      _controller?.markNeedsUpdate();
+      _finalizeCollectionAction(_oldList);
     }
   }
 
   @override
   void insert(int index, T element) {
-    late List _oldList;
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-    if (!_disableReactions) _oldList = List.from(_list);
-
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var mutator in _mutators!) {
-        element = mutator.mutate(element);
-      }
-    }
+    element = _performMutations(element);
 
     _list.insert(index, element);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void insertAll(int index, Iterable<T> iterable) {
-    var _listIterable = iterable.toList();
-
     if (iterable.isNotEmpty) {
-      late List _oldList;
+      List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-      if (!_disableReactions) _oldList = List.from(_list);
-
-      if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-        for (var key in iterable.toList().asMap().keys) {
-          for (var mutator in _mutators!) {
-            _listIterable[key] = mutator.mutate(_listIterable[key]);
-          }
-        }
-      }
+      var _listIterable = _performMutationsOnIterable(iterable);
 
       _list.insertAll(index, _listIterable);
 
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, _oldList, _list);
-      _controller?.markNeedsUpdate();
+      _finalizeCollectionAction(_oldList);
     }
   }
 
@@ -312,16 +257,11 @@ class ReactiveList<T> with ListMixin<T> {
       final index = _list.indexOf(value as T);
 
       if (index >= 0) {
-        late List _oldList;
-
-        if (!_disableReactions) _oldList = List.from(_list);
+        List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
         _list.remove(value);
 
-        if (!_disableReactions)
-          _controller?.initiateReactionsForVariable(
-              _variableName, _oldList, _list);
-        _controller?.markNeedsUpdate();
+        _finalizeCollectionAction(_oldList);
 
         result = true;
       }
@@ -336,15 +276,11 @@ class ReactiveList<T> with ListMixin<T> {
   T removeAt(int index) {
     T value = _list[index];
 
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.removeAt(index);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
 
     return value;
   }
@@ -353,15 +289,11 @@ class ReactiveList<T> with ListMixin<T> {
   T removeLast() {
     T value = _list.last;
 
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.removeLast();
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
 
     return value;
   }
@@ -369,141 +301,84 @@ class ReactiveList<T> with ListMixin<T> {
   @override
   void removeRange(int start, int end) {
     if (end > start) {
-      late List _oldList;
-
-      if (!_disableReactions) _oldList = List.from(_list);
+      List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
       _list.removeRange(start, end);
 
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, _oldList, _list);
-      _controller?.markNeedsUpdate();
+      _finalizeCollectionAction(_oldList);
     }
   }
 
   @override
   void removeWhere(bool Function(T element) test) {
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.removeWhere(test);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void replaceRange(int start, int end, Iterable<T> replacements) {
-    late List _oldList;
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-    var _listReplacements = replacements.toList();
-
-    if (!_disableReactions) _oldList = List.from(_list);
-
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var key in replacements.toList().asMap().keys) {
-        for (var mutator in _mutators!) {
-          _listReplacements[key] = mutator.mutate(_listReplacements[key]);
-        }
-      }
-    }
+    var _listReplacements = _performMutationsOnIterable(replacements);
 
     _list.replaceRange(start, end, _listReplacements);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void retainWhere(bool Function(T element) test) {
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.retainWhere(test);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void setAll(int index, Iterable<T> iterable) {
-    late List _oldList;
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-    var _listIterable = iterable.toList();
-
-    if (!_disableReactions) _oldList = List.from(_list);
-
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var key in iterable.toList().asMap().keys) {
-        for (var mutator in _mutators!) {
-          _listIterable[key] = mutator.mutate(_listIterable[key]);
-        }
-      }
-    }
+    var _listIterable = _performMutationsOnIterable(iterable);
 
     _list.setAll(index, _listIterable);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
-    late List _oldList;
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
-    var _listIterable = iterable.toList();
-
-    if (!_disableReactions) _oldList = List.from(_list);
-
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var key in iterable.toList().asMap().keys) {
-        for (var mutator in _mutators!) {
-          _listIterable[key] = mutator.mutate(_listIterable[key]);
-        }
-      }
-    }
+    var _listIterable = _performMutationsOnIterable(iterable);
 
     _list.setRange(start, end, _listIterable);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void shuffle([Random? random]) {
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.shuffle(random);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
   @override
   void sort([int Function(T a, T b)? compare]) {
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.sort(compare);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldList);
   }
 
-  List<T> getMutatedList() {
+  List<T> get mutatedList {
     if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
       var _tmpList = List<T>.from(_list);
 
@@ -517,6 +392,14 @@ class ReactiveList<T> with ListMixin<T> {
     } else {
       return _list;
     }
+  }
+
+  List<T> get unmutatedList {
+    if (!_dataSafeMutations)
+      print(
+          "[WARNING] You are trying to get unmutated list, when dataSafeMutations disabled!");
+
+    return _list;
   }
 
   @override
@@ -542,19 +425,47 @@ class ReactiveList<T> with ListMixin<T> {
 
   @override
   set length(int value) {
-    if(value > _list.length && !_list.runtimeType.toString().contains("?")) {
-      throw Exception("You can't increase length of list by its setter, if its type is non-nullable (type is ${_list.runtimeType})");
+    if (value > _list.length && !_list.runtimeType.toString().contains("?")) {
+      throw Exception(
+          "You can't increase length of list by its setter, if its type is non-nullable (type is ${_list.runtimeType})");
     }
 
-    late List _oldList;
-
-    if (!_disableReactions) _oldList = List.from(_list);
+    List<T> _oldList = _disableReactions ? _list : List<T>.from(_list);
 
     _list.length = value;
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldList, _list);
+    _finalizeCollectionAction(_oldList);
+  }
+
+  T _performMutations(T value) {
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
+
+    return value;
+  }
+
+  Iterable<T> _performMutationsOnIterable(Iterable<T> iterable) {
+    var _listIterable = iterable.toList();
+
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var key in iterable.toList().asMap().keys) {
+        for (var mutator in _mutators!) {
+          _listIterable[key] = mutator.mutate(_listIterable[key]);
+        }
+      }
+    }
+
+    return _listIterable;
+  }
+
+  void _finalizeCollectionAction(List<T> oldValue) {
     _controller?.markNeedsUpdate();
+
+    if (!_disableReactions)
+      _controller?.initiateReactionsForVariable(_variableName, oldValue, _list);
   }
 }
 
@@ -620,22 +531,13 @@ class ReactiveSet<T> with SetMixin<T> {
   bool add(T value) {
     var _result = false;
 
-    late Set _oldSet;
+    Set<T> _oldSet = _disableReactions ? _set : Set<T>.from(_set);
 
-    if (!_disableReactions) _oldSet = Set.from(_set);
-
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var mutator in _mutators!) {
-        value = mutator.mutate(value);
-      }
-    }
+    value = _performMutations(value);
 
     _result = _set.add(value);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldSet, _set);
-
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldSet);
 
     return _result;
   }
@@ -656,16 +558,11 @@ class ReactiveSet<T> with SetMixin<T> {
   bool remove(Object? value) {
     var _result = false;
 
-    late Set _oldSet;
-
-    if (!_disableReactions) _oldSet = Set.from(_set);
+    Set<T> _oldSet = _disableReactions ? _set : Set<T>.from(_set);
 
     _result = _set.remove(value);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldSet, _set);
-
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldSet);
 
     return _result;
   }
@@ -675,16 +572,28 @@ class ReactiveSet<T> with SetMixin<T> {
 
   @override
   void clear() {
-    late Set _oldSet;
-
-    if (!_disableReactions) _oldSet = Set.from(_set);
+    Set<T> _oldSet = _disableReactions ? _set : Set<T>.from(_set);
 
     _set.clear();
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldSet, _set);
+    _finalizeCollectionAction(_oldSet);
+  }
 
+  T _performMutations(T value) {
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
+
+    return value;
+  }
+
+  void _finalizeCollectionAction(Set<T> oldValue) {
     _controller?.markNeedsUpdate();
+
+    if (!_disableReactions)
+      _controller?.initiateReactionsForVariable(_variableName, oldValue, _set);
   }
 }
 
@@ -765,35 +674,23 @@ class ReactiveMap<K, V> with MapMixin<K, V> {
   void operator []=(K key, V value) {
     final oldValue = _map[key];
 
-    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
-      for (var mutator in _mutators!) {
-        value = mutator.mutate(value);
-      }
+    Map<K, V> _oldMap = _disableReactions ? _map : Map<K, V>.from(_map);
 
-    }
+    value = _performMutations(value);
 
     if (oldValue != value) {
       _map[key] = value;
-      _controller?.markNeedsUpdate();
-
-      if (!_disableReactions)
-        _controller?.initiateReactionsForVariable(
-            _variableName, oldValue, value);
+      _finalizeCollectionAction(_oldMap);
     }
   }
 
   @override
   void clear() {
-    late Map _oldMap;
-
-    if (!_disableReactions) _oldMap = Map.from(_map);
+    Map<K, V> _oldMap = _disableReactions ? _map : Map<K, V>.from(_map);
 
     _map.clear();
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldMap, _map);
-
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldMap);
   }
 
   @override
@@ -801,16 +698,11 @@ class ReactiveMap<K, V> with MapMixin<K, V> {
 
   @override
   V? remove(Object? key) {
-    late Map _oldMap;
-
-    if (!_disableReactions) _oldMap = Map.from(_map);
+    Map<K, V> _oldMap = _disableReactions ? _map : Map<K, V>.from(_map);
 
     V? result = _map.remove(key);
 
-    if (!_disableReactions)
-      _controller?.initiateReactionsForVariable(_variableName, _oldMap, _map);
-
-    _controller?.markNeedsUpdate();
+    _finalizeCollectionAction(_oldMap);
 
     return result;
   }
@@ -838,4 +730,21 @@ class ReactiveMap<K, V> with MapMixin<K, V> {
 
   @override
   bool containsValue(Object? value) => _map.containsValue(value);
+
+  V _performMutations(V value) {
+    if (_mutators != null && _mutators!.isNotEmpty && !_dataSafeMutations) {
+      for (var mutator in _mutators!) {
+        value = mutator.mutate(value);
+      }
+    }
+
+    return value;
+  }
+
+  void _finalizeCollectionAction(Map<K, V> oldValue) {
+    _controller?.markNeedsUpdate();
+
+    if (!_disableReactions)
+      _controller?.initiateReactionsForVariable(_variableName, oldValue, _map);
+  }
 }
