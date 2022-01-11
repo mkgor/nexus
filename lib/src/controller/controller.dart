@@ -16,6 +16,21 @@ import '../widgets/builder.dart';
 /// the new value as the second argument
 typedef NexusReaction = void Function(dynamic, dynamic);
 
+/// Generates random string for stateId
+String _getRandomString(int length) {
+  const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  return String.fromCharCodes(
+    Iterable.generate(
+      length,
+      (_) => _chars.codeUnitAt(
+        _rnd.nextInt(_chars.length),
+      ),
+    ),
+  );
+}
+
 /// Base class for any Nexus state controller, each controller must
 /// inherit from it. [NexusController] contains methods for updating
 /// UI, works with synchronous and asynchronous actions, reactions and controls
@@ -66,11 +81,13 @@ abstract class NexusController {
   ///
   /// Calls the [NexusController.init] hook after setting stateId
   NexusController({this.stateId}) {
-    stateId ??=
-        md5.convert(utf8.encode(Random().nextInt(10000).toString())).toString();
+    stateId ??= _getRandomString(32);
 
     init();
   }
+
+  /// Log stream
+  late final _logStream = _logStreamController.stream.asBroadcastStream();
 
   /// Stream controller for logStream (stream for tracking life cycle of [NexusController]]
   final _logStreamController = StreamController<NexusStateEvent>();
@@ -91,14 +108,6 @@ abstract class NexusController {
   /// UI wasn't rebuilt
   var _dirty = false;
 
-  /// Log stream
-  late final _logStream = _logStreamController.stream.asBroadcastStream();
-
-  /// @TODO add method addBuilder()
-  set builderStateList(State<NexusBuilder> builderState) {
-    _builderStateList.add(builderState);
-  }
-
   /// Getter for 'logStream'
   get logStream => _logStream;
 
@@ -116,6 +125,12 @@ abstract class NexusController {
   /// Log stream controller getter, needs for testing
   @visibleForTesting
   StreamController get logStreamController => _logStreamController;
+
+  /// Adds builder to controller's builder list. Any builder which added to controller
+  /// will be rebuild if [NexusController.update] method invoked
+  void registerBuilder(State<NexusBuilder> builderState) {
+    _builderStateList.add(builderState);
+  }
 
   /// Adding reaction for [variableName] with id [reactionId]
   ///
