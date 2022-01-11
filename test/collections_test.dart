@@ -379,18 +379,53 @@ void main() {
       EventType.performedAction,
       EventType.stateUpdated,
       EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
     ];
 
     var iterator = 0;
     var state = DemoState();
-    var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
-      // var expectedEvent = eventsStack[iterator];
-      //
-      // expect(event.type, expectedEvent);
+      var expectedEvent = eventsStack[iterator];
 
-      // print(event.type);
+      expect(event.type, expectedEvent);
 
       iterator++;
     });
@@ -554,18 +589,17 @@ void main() {
       EventType.performedAction,
       EventType.stateUpdated,
       EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
     ];
 
     var iterator = 0;
     var setState = DemoState();
-    var builder = NexusBuilder(builder: (ctx) => Container(), controller: setState);
 
     setState.logStream.listen((event) {
-      // var expectedEvent = eventsStack[iterator];
-      //
-      // expect(event.type, expectedEvent);
+      var expectedEvent = eventsStack[iterator];
 
-      // print(event.type);
+      expect(event.type, expectedEvent);
 
       iterator++;
     });
@@ -608,17 +642,21 @@ void main() {
       EventType.performedAction,
       EventType.stateUpdated,
       EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
     ];
 
     var iterator = 0;
     var state = DemoState();
-    var builder =
-    NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
-      // var expectedEvent = eventsStack[iterator];
-      //
-      // expect(event.type, expectedEvent);
+      var expectedEvent = eventsStack[iterator];
+
+      expect(event.type, expectedEvent);
 
       iterator++;
     });
