@@ -1,4 +1,4 @@
-![test coverage](https://img.shields.io/badge/coverage-95.5%25-green)
+![test coverage](https://img.shields.io/badge/coverage-94.2%25-green)
 ![test results](https://img.shields.io/badge/tests-16%20passed%2C%200%20failed-green)
 
 # Nexus 🚀
