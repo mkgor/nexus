@@ -19,18 +19,53 @@ void main() {
       EventType.performedAction,
       EventType.stateUpdated,
       EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
     ];
 
     var iterator = 0;
     var state = DemoState();
-    var builder = NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
-      // var expectedEvent = eventsStack[iterator];
-      //
-      // expect(event.type, expectedEvent);
+      var expectedEvent = eventsStack[iterator];
 
-      // print(event.type);
+      expect(event.type, expectedEvent);
 
       iterator++;
     });
@@ -80,6 +115,14 @@ void main() {
 
     expect(state.list.first, 42);
     expect(state.list.last, 42);
+
+    state.performAction(() {
+      state.nonNullableList.addAll([1, 2, 3, 4, 5]);
+    });
+
+    expect(() {
+      state.nonNullableList.fillRange(0, 4, null);
+    }, throwsException);
 
     state.performAction(() {
       state.list.insert(0, 1);
@@ -176,6 +219,10 @@ void main() {
 
     expect(state.list.length, 10);
 
+    state.performAction(() {
+      state.nonNullableList.length = 0;
+    });
+
     expect(
       () => state.performAction(
         () {
@@ -199,18 +246,17 @@ void main() {
       EventType.performedAction,
       EventType.stateUpdated,
       EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
     ];
 
     var iterator = 0;
     var setState = DemoState();
-    var builder = NexusBuilder(builder: (ctx) => Container(), controller: setState);
 
     setState.logStream.listen((event) {
-      // var expectedEvent = eventsStack[iterator];
-      //
-      // expect(event.type, expectedEvent);
+      var expectedEvent = eventsStack[iterator];
 
-      // print(event.type);
+      expect(event.type, expectedEvent);
 
       iterator++;
     });
@@ -260,17 +306,21 @@ void main() {
       EventType.performedAction,
       EventType.stateUpdated,
       EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
+      EventType.stateUpdated,
+      EventType.performedAction,
     ];
 
     var iterator = 0;
     var state = DemoState();
-    var builder =
-        NexusBuilder(builder: (ctx) => Container(), controller: state);
 
     state.logStream.listen((event) {
-      // var expectedEvent = eventsStack[iterator];
-      //
-      // expect(event.type, expectedEvent);
+      var expectedEvent = eventsStack[iterator];
+
+      expect(event.type, expectedEvent);
 
       iterator++;
     });
