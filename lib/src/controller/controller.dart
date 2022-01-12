@@ -108,6 +108,10 @@ abstract class NexusController {
   /// UI wasn't rebuilt
   var _dirty = false;
 
+  /// Flag for controller, which means, that controller is performing some action
+  /// at the moment, and UI should be updated after action is finished
+  var _performingAction = false;
+
   /// Getter for 'logStream'
   get logStream => _logStream;
 
@@ -267,9 +271,13 @@ abstract class NexusController {
   ///
   /// Runs arbitrary code in current zone and returns its result
   void performAction(Function fn) {
+    _performingAction = true;
+
     final _actionResult = fn.call();
 
     if (dirty) update();
+
+    _performingAction = false;
 
     NexusGlobalEventBus().emit(
       EventType.performedAction,
@@ -286,9 +294,13 @@ abstract class NexusController {
   ///
   /// Runs arbitrary code in zone and returns its result
   void performAsyncAction(Future Function() fn) async {
+    _performingAction = true;
+
     final _nexusAsyncAction = NexusAsyncAction(this);
 
     final _actionResult = await _nexusAsyncAction.run(fn);
+
+    _performingAction = false;
 
     NexusGlobalEventBus().emit(
       EventType.performedAsyncAction,
@@ -301,13 +313,20 @@ abstract class NexusController {
     return _actionResult;
   }
 
-  /// Marks that the controller needs update
+  /// Marks that the controller needs update or updates state directly if
+  /// reactive variable updating directly from UI
   ///
-  /// It means when method, which annotated by @action is finished its work,
+  /// Method, which annotated by @action is finished its work,
   /// [NexusController.update] will be invoked
   ///
   /// It allows to modify several reactive variables, but update state once
-  void markNeedsUpdate() => _dirty = true;
+  void markNeedsUpdate() {
+    if(_performingAction) {
+      _dirty = true;
+    } else {
+      update();
+    }
+  }
 
   /// Calling when NexusController initializing
   @mustCallSuper
