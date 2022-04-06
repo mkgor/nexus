@@ -17,6 +17,10 @@ class StateTemplate {
   @override
   String toString() {
     return """
+class ${name}Properties {
+  ${reactiveTemplates?.map((e) => "static const ${e.name.startsWith("_") ? "\$${e.name}" : e.name} = '${e.name}';").join("\n")}
+}
+
 mixin _\$${name}Mixin on $name, $superclass {
   ${reactiveTemplates != null ? reactiveTemplates?.join("\n").toString() : ""}\n
   ${actionTemplates != null ? actionTemplates?.join("\n").toString() : ""}
