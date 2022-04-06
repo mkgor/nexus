@@ -25,3 +25,28 @@ class _NexusBuilderState extends State<NexusBuilder> {
   @override
   Widget build(BuildContext context) => widget.builder(context);
 }
+
+
+class MultiNexusBuilder extends StatefulWidget {
+  final List<NexusController> controllers;
+  final WidgetBuilder builder;
+
+  MultiNexusBuilder({Key? key, required this.builder, required this.controllers}) : super(key: key);
+
+  @override
+  _MultiNexusBuilderState createState() => _MultiNexusBuilderState();
+}
+
+class _MultiNexusBuilderState extends State<MultiNexusBuilder> {
+  @override
+  void initState() {
+    super.initState();
+
+    widget.controllers.forEach((element) {
+      element.registerBuilder(this);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.builder(context);
+}

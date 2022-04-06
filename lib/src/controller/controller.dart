@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:nexus/src/events.dart';
 import 'package:nexus/src/stream_singleton.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
 
 import '../async_action.dart';
 import '../widgets/builder.dart';
@@ -102,7 +100,7 @@ abstract class NexusController {
   ///
   /// [NexusController] will update all builders from that list if [NexusController.update]
   /// was called
-  final _builderStateList = <State<NexusBuilder>>[];
+  final _builderStateList = <State>[];
 
   /// Flag for controller, which means, that some reactive data was update, but
   /// UI wasn't rebuilt
@@ -124,7 +122,7 @@ abstract class NexusController {
 
   /// Getter for builders, needs for testing
   @visibleForTesting
-  List<State<NexusBuilder>> get builders => _builderStateList;
+  List<State> get builders => _builderStateList;
 
   /// Log stream controller getter, needs for testing
   @visibleForTesting
@@ -132,7 +130,7 @@ abstract class NexusController {
 
   /// Adds builder to controller's builder list. Any builder which added to controller
   /// will be rebuild if [NexusController.update] method invoked
-  void registerBuilder(State<NexusBuilder> builderState) {
+  void registerBuilder(State builderState) {
     _builderStateList.add(builderState);
   }
 
@@ -238,7 +236,7 @@ abstract class NexusController {
   ///
   /// Calling builder widget's rebuild
   void update() {
-    List<State<NexusBuilder>> _unmountedBuildersList = [];
+    List<State> _unmountedBuildersList = [];
 
     _builderStateList.forEach((state) {
       Element _element = state.context as Element;
