@@ -20,9 +20,13 @@ void main() {
 
     state.markNeedsUpdate();
 
-    expect(state.dirty, true);
+    expect(state.dirty, false);
 
-    state.update();
+    state.performAction(() {
+      state.markNeedsUpdate();
+
+      expect(state.dirty, true);
+    });
 
     expect(state.dirty, false);
   });
