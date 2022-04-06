@@ -268,7 +268,7 @@ abstract class NexusController {
   /// Performs synchronous action
   ///
   /// Runs arbitrary code in current zone and returns its result
-  void performAction(Function fn) {
+  E performAction<E>(Function fn) {
     _performingAction = true;
 
     final _actionResult = fn.call();
@@ -291,7 +291,7 @@ abstract class NexusController {
   /// Performs asynchronous action
   ///
   /// Runs arbitrary code in zone and returns its result
-  void performAsyncAction(Future Function() fn) async {
+  Future<E> performAsyncAction<E>(Future Function() fn) async {
     _performingAction = true;
 
     final _nexusAsyncAction = NexusAsyncAction(this);

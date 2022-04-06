@@ -6,6 +6,16 @@ part of '_collections_test_state.dart';
 // NexusGenerator
 // **************************************************************************
 
+class DemoStateBaseProperties {
+  static const list = 'list';
+  static const listWithMutators = 'listWithMutators';
+  static const nonNullableList = 'nonNullableList';
+  static const set = 'set';
+  static const setWithMutators = 'setWithMutators';
+  static const map = 'map';
+  static const mapWithMutators = 'mapWithMutators';
+}
+
 mixin _$DemoStateBaseMixin on DemoStateBase, NexusController {
   bool _$listGate = false;
 

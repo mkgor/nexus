@@ -55,9 +55,11 @@ abstract class ExampleStateBase extends NexusController {
   });
 
   @action
-  void increment(int value) {
+  Future increment(int value) async {
     intList.add(value);
     reactiveUser.weight += value;
+
+    return 1;
   }
 
   @override

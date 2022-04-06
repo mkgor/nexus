@@ -124,13 +124,10 @@ mixin _$ExampleStateBaseMixin on ExampleStateBase, NexusController {
   }
 
   @override
-  get reactiveUser => super.reactiveUser..controller = this;
-
-  @override
-  set reactiveUser(User newValue) {
+  set reactiveUser(dynamic newValue) {
     if (reactiveUser != newValue) {
       var oldValue = reactiveUser;
-      super.reactiveUser = newValue..controller = this;
+      super.reactiveUser = newValue;
 
       markNeedsUpdate();
 
@@ -204,7 +201,7 @@ mixin _$ExampleStateBaseMixin on ExampleStateBase, NexusController {
   }
 
   @override
-  void increment(int value) {
-    return performAction(() => super.increment(value));
+  Future<dynamic> increment(int value) async {
+    return performAsyncAction<dynamic>(() => super.increment(value));
   }
 }

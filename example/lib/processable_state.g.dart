@@ -10,7 +10,7 @@ class ProcessableStateBaseProperties {}
 
 mixin _$ProcessableStateBaseMixin on ProcessableStateBase, NexusController {
   @override
-  Future changeMode() async {
-    return performAsyncAction(() => super.changeMode());
+  Future<dynamic> changeMode() async {
+    return performAsyncAction<dynamic>(() => super.changeMode());
   }
 }

@@ -1,4 +1,5 @@
 import 'package:nexus_codegen/src/templates/method.dart';
+import 'package:nexus_codegen/src/utils.dart';
 
 class ActionTemplate {
   final String type;
@@ -32,7 +33,7 @@ class ActionTemplate {
   // ignore: prefer_single_quotes
   String toString() => """
     @override
-    ${isAsync ? "Future" : method.returnType} ${method.name}${method.typeParams}(${method.params}) ${isAsync ? "async" : ""} {
-      return perform${isAsync ? "Async" : ""}Action(() => super.${method.name}($argumentsString));
+    ${method.returnType} ${method.name}${method.typeParams}(${method.params}) ${isAsync ? "async" : ""} {
+      return perform${isAsync ? "Async" : ""}Action${getGenericFromString(method.returnType)}(() => super.${method.name}($argumentsString));
     }""";
 }

@@ -81,7 +81,7 @@ class StateVisitor extends SimpleElementVisitor {
         template = ReactiveCollectionTemplate(
           type: element.type.getDisplayString(withNullability: true),
           name: element.name,
-          genericType: _getGeneric(element.type),
+          genericType: getGenericFromType(element.type),
           disableReactions: _isReactionsDisabled,
           generateForReactiveObject: false,
           mutators: _mutators,
@@ -168,15 +168,5 @@ class StateVisitor extends SimpleElementVisitor {
     return type
         .getDisplayString(withNullability: true)
         .replaceAll(RegExp(r"<.*>"), "");
-  }
-
-  String? _getGeneric(DartType type) {
-    String _typeString = type.getDisplayString(withNullability: true);
-
-    if (_typeString.contains(RegExp("<"))) {
-      return RegExp(r"<.*>").firstMatch(_typeString)?.group(0);
-    } else {
-      return null;
-    }
   }
 }
