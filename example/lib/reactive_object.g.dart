@@ -6,6 +6,11 @@ part of 'reactive_object.dart';
 // NexusObjectGenerator
 // **************************************************************************
 
+class UserAbstractProperties {
+  static const name = 'name';
+  static const weight = 'weight';
+}
+
 mixin _$UserAbstractMixin on UserAbstract, ReactiveObject {
   @override
   set name(String newValue) {

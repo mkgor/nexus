@@ -6,6 +6,16 @@ part of 'example_state.dart';
 // NexusGenerator
 // **************************************************************************
 
+class ExampleStateBaseProperties {
+  static const $_counter = '_counter';
+  static const flag = 'flag';
+  static const intList = 'intList';
+  static const stringList = 'stringList';
+  static const reactiveUser = 'reactiveUser';
+  static const fullName = 'fullName';
+  static const map = 'map';
+}
+
 mixin _$ExampleStateBaseMixin on ExampleStateBase, NexusController {
   @override
   set _counter(int newValue) {
@@ -114,10 +124,13 @@ mixin _$ExampleStateBaseMixin on ExampleStateBase, NexusController {
   }
 
   @override
-  set reactiveUser(dynamic newValue) {
+  get reactiveUser => super.reactiveUser..controller = this;
+
+  @override
+  set reactiveUser(User newValue) {
     if (reactiveUser != newValue) {
       var oldValue = reactiveUser;
-      super.reactiveUser = newValue;
+      super.reactiveUser = newValue..controller = this;
 
       markNeedsUpdate();
 
