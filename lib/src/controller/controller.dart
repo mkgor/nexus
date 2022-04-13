@@ -102,6 +102,9 @@ abstract class NexusController {
   /// was called
   final _builderStateList = <State>[];
 
+  /// Is controller mounted and ready to work
+  var _mounted = false;
+
   /// Flag for controller, which means, that some reactive data was update, but
   /// UI wasn't rebuilt
   var _dirty = false;
@@ -115,6 +118,9 @@ abstract class NexusController {
 
   /// Getter for 'dirty'
   get dirty => _dirty;
+
+  /// Getter for 'mounted'
+  get mounted => _mounted;
 
   /// Getter for actual [BuildContext]. Returns context of last registered [NexusBuilder]
   get context =>
@@ -236,6 +242,9 @@ abstract class NexusController {
   ///
   /// Calling builder widget's rebuild
   void update() {
+    if(!_mounted)
+      throw Exception("Unable to update controller which is unmounted");
+
     List<State> _unmountedBuildersList = [];
 
     _builderStateList.forEach((state) {
@@ -341,6 +350,8 @@ abstract class NexusController {
         context: context,
       ),
     );
+
+    _mounted = true;
   }
 
   /// Calling when updating reactive variable
@@ -362,5 +373,6 @@ abstract class NexusController {
     );
 
     _logStreamController.close();
+    _mounted = false;
   }
 }
