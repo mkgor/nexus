@@ -14,7 +14,7 @@ class NexusBuilder extends StatefulWidget {
   _NexusBuilderState createState() => _NexusBuilderState();
 }
 
-class _NexusBuilderState extends State<NexusBuilder> {
+class _NexusBuilderState extends State<NexusBuilder> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -23,7 +23,14 @@ class _NexusBuilderState extends State<NexusBuilder> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(context);
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return widget.builder(context);
+  }
+
+  @override
+  bool get wantKeepAlive => widget.controller.mounted;
 }
 
 
@@ -37,7 +44,7 @@ class MultiNexusBuilder extends StatefulWidget {
   _MultiNexusBuilderState createState() => _MultiNexusBuilderState();
 }
 
-class _MultiNexusBuilderState extends State<MultiNexusBuilder> {
+class _MultiNexusBuilderState extends State<MultiNexusBuilder> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -48,5 +55,19 @@ class _MultiNexusBuilderState extends State<MultiNexusBuilder> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(context);
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return widget.builder(context);
+  }
+
+  @override
+  bool get wantKeepAlive {
+    for(var controller in widget.controllers) {
+      if(controller.mounted)
+        return true;
+    }
+
+    return false;
+  }
 }
