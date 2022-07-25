@@ -23,7 +23,10 @@
 | Guards | ✅ |
 | Unit-tests | ✅ |
 | Documentation | ✅ |
-| Final refactoring | WIP |
+| Perfomance optimization | |
+| Reactive collections  | |
+| Builders optimization | |
+| Reactions rethink | |
 
 ## Quickstart
 
