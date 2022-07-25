@@ -129,16 +129,16 @@ String? getGenericFromType(DartType type) {
   String _typeString = type.getDisplayString(withNullability: true);
 
   if (_typeString.contains(RegExp("<"))) {
-    return RegExp(r"<.*>").firstMatch(_typeString)?.group(0)?.replaceAll(" ", "");
+    return RegExp(r"<.*>").firstMatch(_typeString)?.group(0)?.replaceAll(" ", "") ?? "";
   } else {
-    return null;
+    return "";
   }
 }
 
 String? getGenericFromString(String type) {
   if (type.contains(RegExp("<"))) {
-    return RegExp(r"<.*>").firstMatch(type)?.group(0)?.replaceAll(" ", "");
+    return RegExp(r"<.*>").firstMatch(type)?.group(0)?.replaceAll(" ", "") ?? "";
   } else {
-    return null;
+    return "";
   }
 }
